@@ -1,0 +1,144 @@
+This project was generated using the MD-SAL Maven Archetype.
+
+This ReadMe has the following sections:
+1) Quick Start - Follow Steps Before Editing Anything
+2) Quick Start - Deploying Your New Bundles.
+3) Automatically Deploying your Bundles
+4) Overview of Bundles
+5) Which Bundles do I Need?
+6) More Information
+
+==========================================================
+=== Quick Start - Follow Steps Before Editing Anything ===
+==========================================================
+These quick steps outline the commands you run one immediately following the creation of these projects.
+
+    1) One time only, cd into the 'generate' folder.
+
+    2) Run 'mvn clean install -Dgen' (this generates the remaining initial file content to finalize your
+    project's initial set up.
+
+    3) cd back up one level ( i.e. run 'cd ..' )
+
+    4) Delete the generate directory (it is no longer needed).
+
+    5) Run a maven build (i.e. 'mvn clean install' ).
+
+You are now ready to modify your source code. If you want, you can deploy your MD-SAL application now.
+
+================================================
+=== Quick Start - Deploying Your New Bundles ===
+================================================
+These steps outline how to manually deploy your new bundles. See below for how to set your bundles
+up to be automatically included in your distribution whenever that is built.
+
+    1) Locate your distribution of ODL. The distribution for the core controller is found under the
+    controller git repository (after running a mvn clean install from the controller root). The path is
+    controller/opendaylight/distribution/opendaylight/target/distribution.opendaylight-osgipackage/opendaylight/.
+
+    2)Copy model/target/<app-name>-model-<version>.jar to the 'plugins' directory in your distribution of the controller.
+
+    3)Copy provider/src/main/resources/configuration/initial/05-provider-<app_name>-sample.xml to the
+    'configuration/initial/' directory in your distribution of the controller.
+
+    4)Copy provider/target/<app-name>-provider-<version>.jar to the 'plugins' directory in your distribution of the controller.
+
+    5)Copy consumer/src/main/resources/configuration/initial/06-consumer-<app_name>-sample.xml to the
+    'configuration/initial/' directory in your distribution of the controller.
+
+    6)Copy consumer/target/<app-name>-consumer-<version>.jar to the 'plugins' directory in your distribution of the controller.
+
+    7)Copy web/target/<app-name>-web-<version>.jar to the 'plugins' directory in your distribution of the controller
+
+    8)Run the controller using the run.sh. You should see messages similar to the following being printed:
+
+//Note: Below our "app-name" is "Task" - you can see that we use that name as the prefix for classes.
+2014-07-02 05:16:08.258 EDT [config-pusher] INFO  o.o.c.c.y.c.t.i.TaskProviderModule - TaskProvider (instance org.opendaylight.controller.config.yang.config.task_provider.impl.TaskProviderModule$1CloseResources@11a15a0) initialized.
+2014-07-02 05:16:08.305 EDT [config-pusher] INFO  o.o.c.c.y.c.t.i.TaskConsumerModule - TaskConsumerService (instance org.opendaylight.controller.config.yang.config.task_consumer.impl.TaskConsumerModule$1AutoCloseableService@56e83e5e) initialized.
+
+If you see these info messages printed, then you have successfully deployed your bundles!
+
+============================================
+=== Automatically Deploying your Bundles ===
+============================================
+
+To have your bundles and configuration files deployed automatically when the distribution is built follow these steps:
+
+    1) Modify the 'controller/opendaylight/distribution/opendaylight/pom.xml" adding the bundles you want to deploy as dependencies.
+    (now when the distribution project is built, your artifacts will be automatically copied into the distribution).
+
+    2) *Move* provider/src/main/resources/configuration/initial/05-provider-<app_name>-sample.xml to the
+    'controller/opendaylight/distribution/opendaylight/src/main/resources/configuration/initial/' directory
+
+    3) *Move* consumer/src/main/resources/configuration/initial/06-consumer-<app_name>-sample.xml to the
+    'controller/opendaylight/distribution/opendaylight/src/main/resources/configuration/initial/' directory.
+    (when the distribution project is built these configuration files are copied to the configuration/initial directory in the distribution).
+
+===========================
+=== Overview of Bundles ===
+===========================
+
+Once the archetype creation completes, you will have 5 sub folders created.
+
+1) generate
+    - This is a helper folder which is used immediately after generating these files. It allows for
+    us to more intelligently configure your MD-SAL project beyond what a basic maven archetype can
+    do. Follow the steps in the 'Quick Start - Follow Steps Before Editing Anything' section above
+    to finish the archetype creation.
+
+2) model
+    - This folder contains the sample yang file which defines your "model". The generated file
+    contains sample contents of a yang file. *Generally* speaking, you will not need to add any
+    java code here (it is auto-generated from the yang file). There are a few exceptions when writing
+    complex yang files. For now, assume you do not have any need to make modifications there.
+
+3) provider
+    - The provider bundle sets you up with a service that implements any RPC (remote procedure calls)
+    that were defined in the model's yang files. Additionally, it automatically sets your application
+    up with access to the follow MD-SAL services:
+
+        a) DataBroker for reading, writing and listening to changes on models in the store
+        b) RpcRegistryService for registering your RPC implementation, or, invoking other RpcImplementations defined else where.
+        c) NotificationProviderService - for sending any Notifications defined in your yang file.
+
+4) consumer
+    - The consumer bundle illustrates how you could write an application which consumes the RPC services
+    that you provide with your provider bundle. In the consumer we only set up initial access to the
+    RpcRegistryService, however with a few modifications you can gain access to the DataBroker and
+    NotificationProviderService as well.
+
+5) web
+    - The web bundle provides an application that allows you to define customer REST APIs. Remember,
+    you get access to RESTConf web services for your model automatically just for deploying your
+    model.
+
+In addition to above folders/bundles we also generate:
+     i) a root parent pom.xml file which enables quick building of your projects bundles
+    ii) a .gitignore file, which is set up to automatically ignore a default set of files (target
+        directories, eclipse project files etc). Therefore running a 'git add .' command from the
+        root project should add only the files you want checked into source!
+   iii) This read me.
+
+================================
+=== Which Bundles do I Need? ===
+================================
+
+The bundles you need depend on your application. Refer to the above descriptions for details on
+what each bundle provides for you. Most MD-SAL applications can probably make due with just the following
+bundles to start:
+
+    model
+    provider
+
+If you don't want to use the other bundles for now, simply modify the root pom.xml and comment out
+the remaining bundles from the "modules" section at the end of the pom.xml file.
+
+Note: The consumer and provider bundles depend on the model bundle. So if you are using either of
+those bundles you must also use the model bundle.
+
+========================
+=== More Information ===
+========================
+For more information, view the Archetype wiki page on wiki.opendaylight.org.
+
+https://wiki.opendaylight.org/view/OpenDaylight_Toolkit:MD-SAL-Simple_Archetype
