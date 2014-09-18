@@ -296,7 +296,7 @@
   <modules>
     <module>model</module>
     <module>provider</module>
-    <module>consumer</module>
-    <module>web</module>
+    <!--module>consumer</module>
+    <module>web</module-->
   </modules>
 </project>

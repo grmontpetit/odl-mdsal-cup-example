@@ -7,7 +7,7 @@ module cup-provider-impl {
     import opendaylight-md-sal-binding { prefix mdsal; revision-date 2013-10-28; }
 
     description
-        "This module contains the base YANG definitions for toaster-provider impl implementation.";
+        "This module contains the base YANG definitions for cup-provider impl implementation.";
 
     revision "2014-01-31" {
         description

@@ -3,3 +3,8 @@ target
 ./target
 .DSStore
 **.class
+
+.project
+.settings
+.classpath
+MANIFEST.MF
