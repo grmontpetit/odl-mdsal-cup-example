@@ -2,7 +2,7 @@ module cup {
 	yang-version 1;
 
 	namespace
-      "http://netconfcentral.org/ns/tea-time";
+      "http://netconfcentral.org/ns/cup";
 
     prefix tea;
 

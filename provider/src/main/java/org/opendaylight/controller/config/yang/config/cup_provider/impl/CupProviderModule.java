@@ -19,7 +19,6 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
 
     @Override
     public java.lang.AutoCloseable createInstance() {
-        // TODO:implement
         final OpendaylightCup opendaylightCup = new OpendaylightCup();
         
         DataBroker dataBrokerService = getDataBrokerDependency();
