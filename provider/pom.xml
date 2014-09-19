@@ -25,7 +25,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.opendaylight.controller.config.yang.config.tea-time_provider.impl</Export-Package>
+                        <Export-Package>org.opendaylight.controller.config.yang.config.cup_provider.impl</Export-Package>
                         <Import-Package>*</Import-Package>
                     </instructions>
                 </configuration>
@@ -88,7 +88,7 @@
     <dependencies>
         <dependency>
             <groupId>org.opendaylight.controller</groupId>
-            <artifactId>tea-time-model</artifactId>
+            <artifactId>cup-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

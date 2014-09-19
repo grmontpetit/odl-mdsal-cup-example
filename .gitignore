@@ -8,3 +8,5 @@ target
 .settings
 .classpath
 MANIFEST.MF
+
+copy_resources.sh
