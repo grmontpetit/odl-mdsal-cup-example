@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <snapshot>
     <configuration>
         <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -6,14 +7,26 @@
                     <type xmlns:cup="urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl">
                         cup:cup-provider-impl
                     </type>
-
                     <name>cup-provider-impl</name>
+
+                    <rpc-registry>
+                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-rpc-registry</type>
+                        <name>binding-rpc-broker</name>
+                    </rpc-registry>
 
                     <data-broker>
                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-async-data-broker</type>
                         <name>binding-data-broker</name>
                     </data-broker>
+
+                    <notification-service>
+                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">
+                            binding:binding-notification-service
+                        </type>
+                        <name>binding-notification-broker</name>
+                    </notification-service>
                 </module>
+
             </modules>
         </data>
 
