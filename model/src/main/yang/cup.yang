@@ -14,7 +14,7 @@ module cup {
     description
       "YANG version of the TEA-MIB.";
 
-    revision "204-11-16" {
+    revision "2014-11-16" {
       description
         "Cup module in progress.";
     }

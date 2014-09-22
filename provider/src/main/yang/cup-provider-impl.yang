@@ -9,7 +9,7 @@ module cup-provider-impl {
     description
         "This module contains the base YANG definitions for cup-provider impl implementation.";
 
-    revision "2014-01-31" {
+    revision "2014-11-16" {
         description
             "Initial revision.";
     }

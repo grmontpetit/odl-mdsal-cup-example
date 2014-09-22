@@ -1,6 +1,6 @@
 package org.opendaylight.controller.config.yang.config.cup_provider.impl;
 
-import org.opendaylight.controller.OpendaylightCup;
+import org.opendaylight.controller.cup.provider.OpendaylightCup;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 
 public class CupProviderModule extends org.opendaylight.controller.config.yang.config.cup_provider.impl.AbstractCupProviderModule {
@@ -8,7 +8,9 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
         super(identifier, dependencyResolver);
     }
 
-    public CupProviderModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier, org.opendaylight.controller.config.api.DependencyResolver dependencyResolver, org.opendaylight.controller.config.yang.config.cup_provider.impl.CupProviderModule oldModule, java.lang.AutoCloseable oldInstance) {
+    public CupProviderModule(final org.opendaylight.controller.config.api.ModuleIdentifier identifier, 
+    		final org.opendaylight.controller.config.api.DependencyResolver dependencyResolver, 
+    		final CupProviderModule oldModule, final java.lang.AutoCloseable oldInstance) {
         super(identifier, dependencyResolver, oldModule, oldInstance);
     }
 
@@ -20,7 +22,10 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
     @Override
     public java.lang.AutoCloseable createInstance() {
         final OpendaylightCup opendaylightCup = new OpendaylightCup();
-        
+
+        // Register to md-sal
+        //opendaylightCup.setNotificationProvider(getNotificationServiceDependency());
+
         DataBroker dataBrokerService = getDataBrokerDependency();
         opendaylightCup.setDataProvider(dataBrokerService);
         

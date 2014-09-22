@@ -1,13 +1,13 @@
-package org.opendaylight.controller;
+package org.opendaylight.controller.cup.provider;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.TransactionStatus;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev691231.Cup;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev691231.Cup.CupStatus;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev691231.CupBuilder;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev691231.DisplayString;
+import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup;
+import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup.CupStatus;
+import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.CupBuilder;
+import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.DisplayString;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
@@ -50,33 +50,40 @@ public class OpendaylightCup  implements AutoCloseable{
         WriteTransaction tx = dataProvider.newWriteOnlyTransaction();
         tx.put( LogicalDatastoreType.OPERATIONAL,CUP_IID, buildCup( CupStatus.Cold ) );
         
-        ListenableFuture<RpcResult<TransactionStatus>> commitFuture = tx.commit();
+        //ListenableFuture<RpcResult<TransactionStatus>> commitFuture = tx.commit();
         
-        Futures.addCallback( commitFuture, new FutureCallback<RpcResult<TransactionStatus>>() {
+        //Futures.addCallback( commitFuture, new FutureCallback<RpcResult<TransactionStatus>>() {
+        System.out.println("Adding future callback");
+        Futures.addCallback( tx.submit(), new FutureCallback<Void>() {
             @Override
-            public void onSuccess( RpcResult<TransactionStatus> result ) {
-                if( result.getResult() != TransactionStatus.COMMITED ) {
-                    LOG.error( "Failed to update cup status: " + result.getErrors() );
-                }
-                
-                notifyCallback( result.getResult() == TransactionStatus.COMMITED );
+            public void onSuccess( final Void result ) {
+                notifyCallback( true );
             }
+//            @Override
+//            public void onSuccess( RpcResult<TransactionStatus> result ) {
+//                if( result.getResult() != TransactionStatus.COMMITED ) {
+//                    LOG.error( "Failed to update cup status: " + result.getErrors() );
+//                }
+//                
+//                notifyCallback( result.getResult() == TransactionStatus.COMMITED );
+//            }
             
             @Override
-            public void onFailure( Throwable t ) {
+            public void onFailure( final Throwable t ) {
                 // We shouldn't get an OptimisticLockFailedException (or any ex) as no
                 // other component should be updating the operational state.
-                LOG.error( "Failed to update toaster status", t );
+                LOG.error( "Failed to update cup status", t );
                 
                 notifyCallback( false );
             }
             
-            void notifyCallback( boolean result ) {
+            void notifyCallback( final boolean result ) {
                 if( resultCallback != null ) {
                     resultCallback.apply( result );
                 }
             }
         } );
+        System.out.println("Future callback done");
     }
 
     @Override
@@ -88,12 +95,12 @@ public class OpendaylightCup  implements AutoCloseable{
             Futures.addCallback( future, new FutureCallback<RpcResult<TransactionStatus>>() {
                 @Override
                 public void onSuccess( RpcResult<TransactionStatus> result ) {
-                    LOG.debug( "Delete Toaster commit result: " + result );
+                    LOG.debug( "Delete Cup commit result: " + result );
                 }
                 
                 @Override
                 public void onFailure( Throwable t ) {
-                    LOG.error( "Delete of Toaster failed", t );
+                    LOG.error( "Delete of Cup failed", t );
                 }
             } );
         }

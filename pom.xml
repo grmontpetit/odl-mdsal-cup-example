@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
   <groupId>org.opendaylight.controller</groupId>
-  <artifactId>cup</artifactId>
+  <artifactId>cup-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusproxy>http://nexus.opendaylight.org/content</nexusproxy>
     <yangtools.version>0.6.2-SNAPSHOT</yangtools.version>
-    <bundle.plugin.version>2.3.7</bundle.plugin.version>
+    <bundle.plugin.version>2.4.0</bundle.plugin.version>
     <sitedeploy>dav:http://nexus.opendaylight.org/content/sites/site</sitedeploy>
     <java.version.source>1.7</java.version.source>
     <java.version.target>1.7</java.version.target>
@@ -24,6 +24,11 @@
     <jmxGeneratorPath>src/main/yang-gen-config</jmxGeneratorPath>
     <salGeneratorPath>src/main/yang-gen-sal</salGeneratorPath>
     <config.version>0.2.5-SNAPSHOT</config.version>
+    <org.osgi.core.version>5.0.0</org.osgi.core.version>
+    <yang-maven-plugin.version>0.6.2-SNAPSHOT</yang-maven-plugin.version>
+    <commons.util.version>1.0</commons.util.version>
+    <yangtools.version>0.6.2-SNAPSHOT</yangtools.version>
+    <yang-jmx-generator.version>1.0.0-SNAPSHOT</yang-jmx-generator.version>
   </properties>
 
   <scm>
