@@ -299,9 +299,10 @@
     </plugins>
   </build>
   <modules>
-    <module>model</module>
-    <module>provider</module>
-    <!--module>consumer</module>
-    <module>web</module-->
+    <module>cup</module>
+    <module>cup-provider</module>
+    <!--module>cup-consumer</module>
+    <module>cup-web</module>
+    <module>cup-config</module-->
   </modules>
 </project>
