@@ -3,7 +3,7 @@ target
 ./target
 .DSStore
 **.class
-
+cup-config/target-ide/*
 .project
 .settings
 .classpath
