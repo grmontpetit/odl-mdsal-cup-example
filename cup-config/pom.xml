@@ -6,6 +6,7 @@
     <groupId>org.opendaylight.controller</groupId>
     <artifactId>cup-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../</relativePath>
   </parent>
   <artifactId>cup-config</artifactId>
   <description>Configuration files for cup</description>

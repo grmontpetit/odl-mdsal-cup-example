@@ -5,6 +5,7 @@
         <artifactId>cup-parent</artifactId>
         <groupId>org.opendaylight.controller</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>cup-consumer</artifactId>
     <packaging>bundle</packaging>
