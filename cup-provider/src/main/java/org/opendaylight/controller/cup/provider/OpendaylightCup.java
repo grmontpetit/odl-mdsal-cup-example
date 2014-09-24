@@ -53,7 +53,6 @@ public class OpendaylightCup  implements AutoCloseable{
         //ListenableFuture<RpcResult<TransactionStatus>> commitFuture = tx.commit();
         
         //Futures.addCallback( commitFuture, new FutureCallback<RpcResult<TransactionStatus>>() {
-        System.out.println("Adding future callback");
         Futures.addCallback( tx.submit(), new FutureCallback<Void>() {
             @Override
             public void onSuccess( final Void result ) {
@@ -83,7 +82,6 @@ public class OpendaylightCup  implements AutoCloseable{
                 }
             }
         } );
-        System.out.println("Future callback done");
     }
 
     @Override
