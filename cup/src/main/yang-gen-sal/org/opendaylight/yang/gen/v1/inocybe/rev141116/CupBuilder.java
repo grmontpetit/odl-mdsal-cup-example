@@ -1,6 +1,6 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116;
 import com.google.common.collect.Range;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup.CupStatus;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.CupStatus;
 import java.util.Collections;
 import java.util.Map;
 import org.opendaylight.yangtools.yang.binding.DataObject;
@@ -8,13 +8,13 @@ import java.util.HashMap;
 import com.google.common.collect.ImmutableList;
 import java.math.BigInteger;
 import java.util.List;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.DisplayString;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString;
 import org.opendaylight.yangtools.yang.binding.Augmentation;
 
 
 /**
- * Class that builds {@link org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup} instances.
- * @see org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup
+ * Class that builds {@link org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup} instances.
+ * @see org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup
  */
 public class CupBuilder {
 
@@ -24,7 +24,7 @@ public class CupBuilder {
     private static List<Range<BigInteger>> _cupModelNumber_length;
     private CupStatus _cupStatus;
 
-    Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> augmentation = new HashMap<>();
+    Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentation = new HashMap<>();
 
     public CupBuilder() {
     } 
@@ -53,7 +53,7 @@ public class CupBuilder {
     }
     
     @SuppressWarnings("unchecked")
-    public <E extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> E getAugmentation(java.lang.Class<E> augmentationType) {
+    public <E extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> E getAugmentation(java.lang.Class<E> augmentationType) {
         if (augmentationType == null) {
             throw new IllegalArgumentException("Augmentation Type reference cannot be NULL!");
         }
@@ -123,7 +123,7 @@ public class CupBuilder {
         return this;
     }
     
-    public CupBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup> augmentation) {
+    public CupBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
     }
@@ -134,15 +134,15 @@ public class CupBuilder {
 
     private static final class CupImpl implements Cup {
 
-        public java.lang.Class<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup> getImplementedInterface() {
-            return org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup.class;
+        public java.lang.Class<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup> getImplementedInterface() {
+            return org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.class;
         }
 
         private final DisplayString _cupManufacturer;
         private final DisplayString _cupModelNumber;
         private final CupStatus _cupStatus;
 
-        private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> augmentation = new HashMap<>();
+        private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentation = new HashMap<>();
 
         private CupImpl(CupBuilder base) {
             this._cupManufacturer = base.getCupManufacturer();
@@ -153,8 +153,8 @@ public class CupBuilder {
                     this.augmentation = Collections.emptyMap();
                     break;
                     case 1:
-                        final Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> e = base.augmentation.entrySet().iterator().next();
-                        this.augmentation = Collections.<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>singletonMap(e.getKey(), e.getValue());       
+                        final Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> e = base.augmentation.entrySet().iterator().next();
+                        this.augmentation = Collections.<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>singletonMap(e.getKey(), e.getValue());       
                     break;
                 default :
                     this.augmentation = new HashMap<>(base.augmentation);
@@ -178,7 +178,7 @@ public class CupBuilder {
         
         @SuppressWarnings("unchecked")
         @Override
-        public <E extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> E getAugmentation(java.lang.Class<E> augmentationType) {
+        public <E extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> E getAugmentation(java.lang.Class<E> augmentationType) {
             if (augmentationType == null) {
                 throw new IllegalArgumentException("Augmentation Type reference cannot be NULL!");
             }
@@ -204,10 +204,10 @@ public class CupBuilder {
             if (!(obj instanceof DataObject)) {
                 return false;
             }
-            if (!org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup.class.equals(((DataObject)obj).getImplementedInterface())) {
+            if (!org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.class.equals(((DataObject)obj).getImplementedInterface())) {
                 return false;
             }
-            org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup other = (org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup)obj;
+            org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup other = (org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup)obj;
             if (_cupManufacturer == null) {
                 if (other.getCupManufacturer() != null) {
                     return false;
@@ -241,7 +241,7 @@ public class CupBuilder {
                 }
             } else {
                 // Hard case: compare our augments with presence there...
-                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>> e : augmentation.entrySet()) {
+                for (Map.Entry<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> e : augmentation.entrySet()) {
                     if (!e.getValue().equals(other.getAugmentation(e.getKey()))) {
                         return false;
                     }

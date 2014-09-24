@@ -2,7 +2,7 @@ module cup {
 	yang-version 1;
 
 	namespace
-      "http://netconfcentral.org/ns/cup";
+      "inocybe";
 
     prefix tea;
 

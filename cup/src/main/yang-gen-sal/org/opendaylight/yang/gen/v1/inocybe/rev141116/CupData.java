@@ -1,6 +1,6 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116;
 import org.opendaylight.yangtools.yang.binding.DataRoot;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup;
 
 
 /**
@@ -10,7 +10,7 @@ import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup
  * <pre>
  * module cup {
  *     yang-version 1;
- *     namespace "http://netconfcentral.org/ns/cup";
+ *     namespace "inocybe";
  *     prefix "tea";
  *     revision 2014-11-16 {
  *         description "YANG version of the TEA-MIB.
@@ -28,19 +28,19 @@ import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup
  *         }
  *     }
  *     identity black-tea {
- *         base "()IdentitySchemaNodeImpl[base=null, qname=(http://netconfcentral.org/ns/cup?revision=2014-11-16)tea-type]";
+ *         base "()IdentitySchemaNodeImpl[base=null, qname=(inocybe?revision=2014-11-16)tea-type]";
  *         description
  *             "Black tea.";
  *         status CURRENT;
  *     }
  *     identity green-tea {
- *         base "()IdentitySchemaNodeImpl[base=null, qname=(http://netconfcentral.org/ns/cup?revision=2014-11-16)tea-type]";
+ *         base "()IdentitySchemaNodeImpl[base=null, qname=(inocybe?revision=2014-11-16)tea-type]";
  *         description
  *             "Green tea.";
  *         status CURRENT;
  *     }
  *     identity red-tea {
- *         base "()IdentitySchemaNodeImpl[base=null, qname=(http://netconfcentral.org/ns/cup?revision=2014-11-16)tea-type]";
+ *         base "()IdentitySchemaNodeImpl[base=null, qname=(inocybe?revision=2014-11-16)tea-type]";
  *         description
  *             "Red tea";
  *         status CURRENT;

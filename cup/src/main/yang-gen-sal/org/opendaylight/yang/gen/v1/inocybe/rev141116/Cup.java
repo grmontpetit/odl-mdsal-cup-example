@@ -1,9 +1,9 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.binding.ChildOf;
 import org.opendaylight.yangtools.yang.binding.Augmentable;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.DisplayString;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.CupData;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupData;
 
 
 /**
@@ -25,13 +25,13 @@ import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup
  * </pre>
  * The schema path to identify an instance is
  * <i>cup/cup</i>
- * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.CupBuilder}.
- * @see org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.CupBuilder
+ * <p>To create instances of this class use {@link org.opendaylight.yang.gen.v1.inocybe.rev141116.CupBuilder}.
+ * @see org.opendaylight.yang.gen.v1.inocybe.rev141116.CupBuilder
  */
 public interface Cup
     extends
     ChildOf<CupData>,
-    Augmentable<org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.Cup>
+    Augmentable<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>
 {
 
 
@@ -82,7 +82,7 @@ public interface Cup
         }
     }
 
-    public static final QName QNAME = org.opendaylight.yangtools.yang.common.QName.create("http://netconfcentral.org/ns/cup","2014-11-16","cup");;
+    public static final QName QNAME = org.opendaylight.yangtools.yang.common.QName.create("inocybe","2014-11-16","cup");;
 
     /**
      * The name of the cup's manufacturer. For instance China.

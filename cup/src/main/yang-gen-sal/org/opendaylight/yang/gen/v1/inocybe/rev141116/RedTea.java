@@ -1,5 +1,5 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116;
-import org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.TeaType;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.TeaType;
 import org.opendaylight.yangtools.yang.common.QName;
 
 
@@ -9,7 +9,7 @@ import org.opendaylight.yangtools.yang.common.QName;
  * <br />(Source path: <i>META-INF/yang/cup.yang</i>):
  * <pre>
  * identity red-tea {
- *     base "()IdentitySchemaNodeImpl[base=null, qname=(http://netconfcentral.org/ns/cup?revision=2014-11-16)tea-type]";
+ *     base "()IdentitySchemaNodeImpl[base=null, qname=(inocybe?revision=2014-11-16)tea-type]";
  *     description
  *         "Red tea";
  *     status CURRENT;
@@ -20,7 +20,7 @@ import org.opendaylight.yangtools.yang.common.QName;
  */
 public abstract class RedTea extends TeaType
  {
-    public static final QName QNAME = org.opendaylight.yangtools.yang.common.QName.create("http://netconfcentral.org/ns/cup","2014-11-16","red-tea");;
+    public static final QName QNAME = org.opendaylight.yangtools.yang.common.QName.create("inocybe","2014-11-16","red-tea");;
     
     public RedTea() {
     }

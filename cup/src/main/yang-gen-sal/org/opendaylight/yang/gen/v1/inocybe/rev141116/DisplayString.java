@@ -1,4 +1,4 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116;
 import com.google.common.collect.Range;
 import java.io.Serializable;
 import com.google.common.collect.ImmutableList;
@@ -88,7 +88,7 @@ public class DisplayString
 
     @Override
     public java.lang.String toString() {
-        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116.DisplayString.class.getSimpleName()).append(" [");
+        java.lang.StringBuilder builder = new java.lang.StringBuilder(org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString.class.getSimpleName()).append(" [");
         boolean first = true;
     
         if (_value != null) {

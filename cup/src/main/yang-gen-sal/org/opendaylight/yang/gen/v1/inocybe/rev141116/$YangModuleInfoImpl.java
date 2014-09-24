@@ -1,4 +1,4 @@
-package org.opendaylight.yang.gen.v1.http.netconfcentral.org.ns.cup.rev141116 ;
+package org.opendaylight.yang.gen.v1.inocybe.rev141116 ;
 import org.opendaylight.yangtools.yang.binding.YangModuleInfo;
 import java.util.Set;
 import java.util.Collections;
@@ -9,7 +9,7 @@ public final class $YangModuleInfoImpl implements YangModuleInfo {
     private static final YangModuleInfo INSTANCE = new $YangModuleInfoImpl();
 
     private final String name = "cup";
-    private final String namespace = "http://netconfcentral.org/ns/cup";
+    private final String namespace = "inocybe";
     private final String revision = "2014-11-16";
     private final String resourcePath = "/META-INF/yang/cup.yang";
     
