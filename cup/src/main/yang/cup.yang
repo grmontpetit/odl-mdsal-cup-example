@@ -90,4 +90,46 @@ module cup {
           "This variable indicates the current status of the cup.";
       }
     }// container cup
+    
+    rpc heat-cup {
+      description
+       "Heat the tea cup in the microwave. The cupHeated notification will be sent when the cup is heated.
+        An 'in-use' error will be returned if the cup is already being made. A 'resource-denied' error will 
+        be returned if the cup service is disabled.";
+      input {
+        leaf cupTemperature {
+          type uint32 {
+            range "75 .. 100";
+          }
+          default '100';
+          description
+            "This variable controls the heat of the water. It should be on a scale of 75 to 100.
+             Water temperature of 100 is better for black teas and red teas while temperatures
+             of 75 are better for green teas.";
+         }
+
+        leaf cupTeaType {
+          type identityref {
+            base tea:tea-type;
+          }
+          default 'black-tea';
+          description
+            "This variable informs the cup which tea is beign used. The cup uses this information, 
+             combined with cupTemperature, to compute for how long the material must be heated to achieve the required temperature.";
+        }
+      }// input
+    }
+    
+    // action to cancel making toast - takes no input parameters
+    rpc cancel-cup {
+      description
+        "Stop heating the cup, if any is being made.
+          A 'resource-denied' error will be returned 
+          if the cup service is disabled.";
+    }  // rpc cancel-cup
+
+    notification noMoreCups {
+      description
+        "Indicates that there are no available cups to make tea.";
+    }  // notification noMoreCups
 } // module cup

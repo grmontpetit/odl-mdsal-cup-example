@@ -35,7 +35,16 @@ module cup-provider-impl {
                         config:required-identity mdsal:binding-async-data-broker;
                     }
                 }
-            }      
+            }
+            //Wires dependent services into this class - in this case the RPC registry service
+            container rpc-registry {
+                uses config:service-ref {
+                    refine type {
+                       mandatory true;
+                       config:required-identity mdsal:binding-rpc-registry;
+                    }
+                }
+            }       
         }
     }
 }
