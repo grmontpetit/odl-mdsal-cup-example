@@ -36,7 +36,10 @@ module cup-provider-impl {
                     }
                 }
             }
-            //Wires dependent services into this class - in this case the RPC registry service
+            // Wires dependent services into this class - in this case the RPC registry service
+            // This sub-section register the OpendaylightCup as the Provider for the RPC calls.
+            // This section is declaring a dependency on the MD-SAL RPC registry service
+            // similiar to the databroker
             container rpc-registry {
                 uses config:service-ref {
                     refine type {

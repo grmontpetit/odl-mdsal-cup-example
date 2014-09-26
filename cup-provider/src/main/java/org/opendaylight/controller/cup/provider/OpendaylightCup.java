@@ -178,7 +178,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
     
     /**
      * Read the CupStatus and, if currently Cold, try to write the status to Heating.
-     * if that succeeds, then we essentially have an exclusive lock and can proceed
+     * If that succeeds, then we essentially have an exclusive lock and can proceed
      * to make the cup.
      * @param input
      * @param futureResult
@@ -191,7 +191,16 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
         // Read the CupStatus and, if currently Cold, try to write the status to Heating.
         // If that succeeds, then we essentially have an exclusive lock and can proceed
         // to make the cup.
-
+        /**
+         * We create a ReadWriteTransaction by using the databroker.
+         * Then, we read the status of the cup with getCupStatus() using the
+         * databroker again. Once we have the status, we analyze it and
+         * then databroker submit function is called to effectively change 
+         * the cup status.
+         * 
+         * This all affects the MD-SAL tree, more specifically the part of the
+         * tree that contain the cup (the nodes).
+         */
         final ReadWriteTransaction tx = dataProvider.newReadWriteTransaction();
         ListenableFuture<Optional<Cup>> readFuture =
                                           tx.read( LogicalDatastoreType.OPERATIONAL, CUP_IID );
@@ -276,7 +285,19 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
             }
         } );
     }// CheckStatusAndMakeCup
-    
+
+    /**
+     * This is where the cup is heated. The callable method
+     * is running as a thread but returns a value. In this
+     * case, the HeatCupTask returns null. The function heats
+     * the cup, when the cup is at the desired temprature, the
+     * function returns null and the tea is ready to be brewed.
+     * 
+     * TODO Englishmen drinks the cup, then ths method
+     * sets the cup back to cold. The cup is automatically
+     * filled with cold water readyt o be heated in the
+     * microwave.
+     */
     private class HeatCupTask implements Callable<Void> {
 
         final HeatCupInput cupRequest;
@@ -332,16 +353,29 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
         }
     }
 
+    /**
+     * 
+     * @return true if there are no more cups, false otherwise.
+     */
     private boolean outOfCups()
     {
         return amountOfCupsInStock.get() == 0;
     }
 
+    /**
+     * 
+     * @return The RPC error message in case the RPC service
+     * is not available.
+     */
     private RpcError makeNoMoreCupsError() {
         return RpcResultBuilder.newError( ErrorType.APPLICATION, "resource-denied",
                 "No more cups", "out-of-stock", null, null );
     }
 
+    /**
+     * 
+     * @return The RPC error in use.
+     */
     private RpcError makeCupInUseError() {
         return RpcResultBuilder.newWarning( ErrorType.APPLICATION, "in-use",
                 "Cup is busy (in-use)", null, null, null );
