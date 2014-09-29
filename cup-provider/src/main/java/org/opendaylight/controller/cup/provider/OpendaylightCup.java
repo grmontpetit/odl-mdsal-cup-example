@@ -315,8 +315,9 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
             {
                 // make cup just sleeps for n seconds per 10 degrees level.
                 long cupTemperature = OpendaylightCup.this.cupTemperature.get();
-                Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
-
+                //Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
+                Thread.sleep(cupTemperature * (10)*cupRequest.getCupTemperature());
+                System.out.println("Thread.sleep:"+(cupTemperature * (10)*cupRequest.getCupTemperature()));
             }
             catch( InterruptedException e ) {
                 LOG.info( "Interrupted while making the toast" );

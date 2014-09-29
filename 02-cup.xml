@@ -9,6 +9,12 @@
                     </type>
                     <name>cup-provider-impl</name>
 
+                    <!-- Adds a dependency for the rpc-registry to the cup-provider-impl -->
+                    <rpc-registry>
+                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-rpc-registry</type>
+                        <name>binding-rpc-broker</name>
+                    </rpc-registry>
+
                     <data-broker>
                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-async-data-broker</type>
                         <name>binding-data-broker</name>
