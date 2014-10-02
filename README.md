@@ -6,7 +6,7 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 ## Karaf integration
 
 * Modify the controller/opendaylight/commons/opendaylight/pom.xml file and add the following line in the properties section:
-// The 02-cup.xml is the configuration file located in the cup-config project.
+
 ```xml
 <config.cup.configfile>02-cup.xml</config.cup.configfile>
 ```
@@ -14,7 +14,7 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 * Compile controller/opendaylight/commons/opendaylight/pom.xml with mvn clean install.
 
 * Modify the controller/features/mdsal/src/main/resources/features.xml file and add this section:
-// This section is used to load the jars and the config file into the controller.
+
 ```xml
     <feature name='odl-cup' version='0.0.1-SNAPSHOT' description="OpenDaylight :: Cup">
         <feature version='${yangtools.version}'>odl-yangtools-common</feature>
