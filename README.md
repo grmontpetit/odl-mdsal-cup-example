@@ -30,8 +30,8 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 
 * Run karaf
 
-* Load the base features needed by the cup example: feature:install odl-base-all
+* Load the base features needed by the cup example: "feature:install odl-base-all"
 
-* Load restconf: feature:install odl-restconf
+* Load restconf: "feature:install odl-restconf"
 
-* Load the karaf distro and input the command "feature:install odl-cup"
+* Load the cup example: "feature:install odl-cup"
