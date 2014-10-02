@@ -28,6 +28,8 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 ```
 * Compile controller/features/mdsal/pom.xml with mvn clean install
 
+* Run karaf
+
 * Load the base features needed by the cup example: feature:install odl-base-all
 
 * Load the karaf distro and input the command "feature:install odl-cup"
