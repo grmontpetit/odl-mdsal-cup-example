@@ -28,4 +28,6 @@ Karaf integration
 
 4. Compile controller/features/mdsal/pom.xml with mvn clean install
 
-5. Load the karaf distro and input the command "feature:install odl-cup"
+5. Load the base features needed by the cup example: feature:install odl-base-all
+
+6. Load the karaf distro and input the command "feature:install odl-cup"
