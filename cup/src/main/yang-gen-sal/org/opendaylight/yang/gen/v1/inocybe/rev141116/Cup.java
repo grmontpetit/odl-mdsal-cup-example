@@ -21,6 +21,9 @@ import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupData;
  *     leaf cupStatus {
  *         type enumeration;
  *     }
+ *     leaf cupTemperatureFactor {
+ *         type uint32;
+ *     }
  * }
  * </pre>
  * The schema path to identify an instance is
@@ -98,6 +101,12 @@ public interface Cup
      * This variable indicates the current status of the cup.
      */
     CupStatus getCupStatus();
+    
+    /**
+     * The cup water temperature factor. Basically, the number of ms to multiple the 
+     * temperature value by.
+     */
+    java.lang.Long getCupTemperatureFactor();
 
 }
 

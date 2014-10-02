@@ -1,7 +1,7 @@
 package org.opendaylight.controller.cup.provider;
 
-import java.util.Arrays;
-import java.util.Collections;
+//import java.util.Arrays;
+//import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,15 +10,19 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-import org.opendaylight.controller.md.sal.common.api.TransactionStatus;
+//import org.opendaylight.controller.md.sal.common.api.TransactionStatus;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.OptimisticLockFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
-import org.opendaylight.controller.sal.common.util.RpcErrors;
-import org.opendaylight.controller.sal.common.util.Rpcs;
+
+//import org.opendaylight.controller.sal.binding.api.data.DataChangeListener;
+//import org.opendaylight.controller.sal.common.util.RpcErrors;
+//import org.opendaylight.controller.sal.common.util.Rpcs;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.CupStatus;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupBuilder;
@@ -26,10 +30,12 @@ import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCupsBuilder;
+//import org.opendaylight.yangtools.concepts.Immutable;
+//import org.opendaylight.yangtools.concepts.Path;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcError;
-import org.opendaylight.yangtools.yang.common.RpcError.ErrorSeverity;
+//import org.opendaylight.yangtools.yang.common.RpcError.ErrorSeverity;
 import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
@@ -44,7 +50,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
-public class OpendaylightCup  implements CupService, AutoCloseable{
+public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeListener{
     //making this public because this unique ID is required later on in other classes.
     public static final InstanceIdentifier<Cup>  CUP_IID = InstanceIdentifier.builder(Cup.class).build();
     private static final Logger LOG = LoggerFactory.getLogger(OpendaylightCup.class);
@@ -60,6 +66,9 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
     private final AtomicLong cupTemperature = new AtomicLong( 1000 );
 
     private final AtomicLong cupsMade = new AtomicLong(0);
+
+    // Thread safe holder for our darkness multiplier.
+    private final AtomicLong cupTemperatureFactor = new AtomicLong( 1000 );
 
     // The following holds the Future for the current heat cup task.
     // This is used to cancel the current toast.
@@ -212,14 +221,14 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
                 public ListenableFuture<Void> apply(
                         final Optional<Cup> cupData ) throws Exception {
 
-                    CupStatus toasterStatus = CupStatus.Cold;
+                    CupStatus cupStatus = CupStatus.Cold;
                     if( cupData.isPresent() ) {
-                        toasterStatus = cupData.get().getCupStatus();
+                        cupStatus = cupData.get().getCupStatus();
                     }
 
-                    LOG.debug( "Read toaster status: {}", toasterStatus );
+                    LOG.debug( "Read cup status: {}", cupStatus );
 
-                    if( toasterStatus == CupStatus.Cold ) {
+                    if( cupStatus == CupStatus.Cold ) {
 
                         if( outOfCups() ) {
                             LOG.debug( "No more cups" );
@@ -228,7 +237,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
                                     new TransactionCommitFailedException( "", makeNoMoreCupsError() ) );
                         }
 
-                        LOG.debug( "Setting Toaster status to Down" );
+                        LOG.debug( "Setting cup status to Down" );
 
                         // We're not currently making toast - try to update the status to Down
                         // to indicate we're going to make toast. This acts as a lock to prevent
@@ -261,7 +270,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
 
                     // Another thread is likely trying to make toast simultaneously and updated the
                     // status before us. Try reading the status again - if another make toast is
-                    // now in progress, we should get ToasterStatus.Down and fail.
+                    // now in progress, we should get CupStatus.Cold and fail.
 
                     if( ( tries - 1 ) > 0 ) {
                         LOG.debug( "Got OptimisticLockFailedException - trying again" );
@@ -275,7 +284,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
 
                 } else {
 
-                    LOG.debug( "Failed to commit Toaster status", ex );
+                    LOG.debug( "Failed to commit Cup status", ex );
 
                     // Probably already making toast.
                     futureResult.set( RpcResultBuilder.<Void> failed()
@@ -327,12 +336,12 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
 
             amountOfCupsInStock.getAndDecrement();
             if( outOfCups() ) {
-                LOG.info( "Toaster is out of bread!" );
+                LOG.info( "Cup is out of bread!" );
 
                 notificationProvider.publish( new NoMoreCupsBuilder().build() );
             }
 
-            // Set the Toaster status back to up - this essentially releases the toasting lock.
+            // Set the Cup status back to up - this essentially releases the toasting lock.
             // We can't clear the current toast task nor set the Future result until the
             // update has been committed so we pass a callback to be notified on completion.
 
@@ -380,6 +389,35 @@ public class OpendaylightCup  implements CupService, AutoCloseable{
     private RpcError makeCupInUseError() {
         return RpcResultBuilder.newWarning( ErrorType.APPLICATION, "in-use",
                 "Cup is busy (in-use)", null, null, null );
+    }
+
+    /**
+     * This method is used to notify the OpendaylightCup when a data change
+     * is made to the configuration.
+     * 
+     * Effectively, the cup subtree node is modified through restconf
+     * and the onDataChanged is triggered. We check if the changed dataObject is
+     * from the cup subtree, if so we get the value of the temperature.
+     * 
+     * If the temprature from the node is not null, then we change the temperature of
+     * the cup class with the subtree temperature.
+     */
+    @Override
+    public void onDataChanged(  // AsyncDataChangedEvent interface
+                                // public interface AsyncDataChangeEvent<P extends Path<P>, D> extends Immutable{} 
+            AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
+        System.out.println("Data change event triggered on cup");
+        DataObject dataObject = change.getUpdatedSubtree();
+        if( dataObject instanceof Cup )
+        {
+            Cup cup = (Cup) dataObject;
+            Long temperature = cup.getCupTemperatureFactor();
+            if( temperature != null )
+            {
+                System.out.println("Cup temperature (longValue): "+temperature.longValue());
+                cupTemperatureFactor.set( temperature );
+            }
+        }
     }
 
 }

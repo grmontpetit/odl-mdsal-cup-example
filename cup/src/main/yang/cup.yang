@@ -89,6 +89,13 @@ module cup {
         description
           "This variable indicates the current status of the cup.";
       }
+      leaf cupTemperatureFactor {
+        type uint32;
+        config true;
+        default 1000;
+        description
+          "The cup water temperature factor. Basically, the number of ms to multiple the temperature value by.";
+      }
     }// container cup
     
     rpc heat-cup {

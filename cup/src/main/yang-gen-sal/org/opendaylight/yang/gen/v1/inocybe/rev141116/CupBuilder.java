@@ -23,6 +23,8 @@ public class CupBuilder {
     private DisplayString _cupModelNumber;
     private static List<Range<BigInteger>> _cupModelNumber_length;
     private CupStatus _cupStatus;
+    private java.lang.Long _cupTemperatureFactor;
+    private static List<Range<BigInteger>> _cupTemperatureFactor_range;
 
     Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentation = new HashMap<>();
 
@@ -33,6 +35,7 @@ public class CupBuilder {
         this._cupManufacturer = base.getCupManufacturer();
         this._cupModelNumber = base.getCupModelNumber();
         this._cupStatus = base.getCupStatus();
+        this._cupTemperatureFactor = base.getCupTemperatureFactor();
         if (base instanceof CupImpl) {
             CupImpl _impl = (CupImpl) base;
             this.augmentation = new HashMap<>(_impl.augmentation);
@@ -50,6 +53,10 @@ public class CupBuilder {
     
     public CupStatus getCupStatus() {
         return _cupStatus;
+    }
+    
+    public java.lang.Long getCupTemperatureFactor() {
+        return _cupTemperatureFactor;
     }
     
     @SuppressWarnings("unchecked")
@@ -123,6 +130,35 @@ public class CupBuilder {
         return this;
     }
     
+    public CupBuilder setCupTemperatureFactor(java.lang.Long value) {
+        if (value != null) {
+            BigInteger _constraint = BigInteger.valueOf(value);
+            boolean isValidRange = false;
+            for (Range<BigInteger> r : _cupTemperatureFactor_range()) {
+                if (r.contains(_constraint)) {
+                    isValidRange = true;
+                }
+            }
+            if (!isValidRange) {
+                throw new IllegalArgumentException(String.format("Invalid range: %s, expected: %s.", value, _cupTemperatureFactor_range));
+            }
+        }
+        this._cupTemperatureFactor = value;
+        return this;
+    }
+    public static List<Range<BigInteger>> _cupTemperatureFactor_range() {
+        if (_cupTemperatureFactor_range == null) {
+            synchronized (CupBuilder.class) {
+                if (_cupTemperatureFactor_range == null) {
+                    ImmutableList.Builder<Range<BigInteger>> builder = ImmutableList.builder();
+                    builder.add(Range.closed(BigInteger.ZERO, BigInteger.valueOf(4294967295L)));
+                    _cupTemperatureFactor_range = builder.build();
+                }
+            }
+        }
+        return _cupTemperatureFactor_range;
+    }
+    
     public CupBuilder addAugmentation(java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentationType, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup> augmentation) {
         this.augmentation.put(augmentationType, augmentation);
         return this;
@@ -141,6 +177,7 @@ public class CupBuilder {
         private final DisplayString _cupManufacturer;
         private final DisplayString _cupModelNumber;
         private final CupStatus _cupStatus;
+        private final java.lang.Long _cupTemperatureFactor;
 
         private Map<java.lang.Class<? extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>>, Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> augmentation = new HashMap<>();
 
@@ -148,6 +185,7 @@ public class CupBuilder {
             this._cupManufacturer = base.getCupManufacturer();
             this._cupModelNumber = base.getCupModelNumber();
             this._cupStatus = base.getCupStatus();
+            this._cupTemperatureFactor = base.getCupTemperatureFactor();
                 switch (base.augmentation.size()) {
                 case 0:
                     this.augmentation = Collections.emptyMap();
@@ -176,6 +214,11 @@ public class CupBuilder {
             return _cupStatus;
         }
         
+        @Override
+        public java.lang.Long getCupTemperatureFactor() {
+            return _cupTemperatureFactor;
+        }
+        
         @SuppressWarnings("unchecked")
         @Override
         public <E extends Augmentation<org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup>> E getAugmentation(java.lang.Class<E> augmentationType) {
@@ -192,6 +235,7 @@ public class CupBuilder {
             result = prime * result + ((_cupManufacturer == null) ? 0 : _cupManufacturer.hashCode());
             result = prime * result + ((_cupModelNumber == null) ? 0 : _cupModelNumber.hashCode());
             result = prime * result + ((_cupStatus == null) ? 0 : _cupStatus.hashCode());
+            result = prime * result + ((_cupTemperatureFactor == null) ? 0 : _cupTemperatureFactor.hashCode());
             result = prime * result + ((augmentation == null) ? 0 : augmentation.hashCode());
             return result;
         }
@@ -227,6 +271,13 @@ public class CupBuilder {
                     return false;
                 }
             } else if(!_cupStatus.equals(other.getCupStatus())) {
+                return false;
+            }
+            if (_cupTemperatureFactor == null) {
+                if (other.getCupTemperatureFactor() != null) {
+                    return false;
+                }
+            } else if(!_cupTemperatureFactor.equals(other.getCupTemperatureFactor())) {
                 return false;
             }
             if (getClass() == obj.getClass()) {
@@ -285,6 +336,15 @@ public class CupBuilder {
                 }
                 builder.append("_cupStatus=");
                 builder.append(_cupStatus);
+             }
+            if (_cupTemperatureFactor != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append("_cupTemperatureFactor=");
+                builder.append(_cupTemperatureFactor);
              }
             if (first) {
                 first = false;
