@@ -21,7 +21,7 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
         <feature version='${yangtools.version}'>odl-yangtools-binding</feature>
         <feature version='${project.version}'>odl-mdsal-broker</feature>
         <bundle>mvn:org.opendaylight.controller/cup/0.0.1-SNAPSHOT</bundle>
-        <!--bundle>mvn:org.opendaylight.controller.samples/sample-toaster-consumer/${project.version}</bundle-->
+        <bundle>mvn:org.opendaylight.controller/cup-consumer/0.0.1-SNAPSHOT</bundle-->
         <bundle>mvn:org.opendaylight.controller/cup-provider/0.0.1-SNAPSHOT</bundle>
         <configfile finalname="${config.configfile.directory}/${config.cup.configfile}">mvn:org.opendaylight.controller/cup-config/0.0.1-SNAPSHOT/xml/config</configfile>
     </feature>
