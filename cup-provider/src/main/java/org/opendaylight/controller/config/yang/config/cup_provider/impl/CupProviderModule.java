@@ -1,8 +1,12 @@
 package org.opendaylight.controller.config.yang.config.cup_provider.impl;
 
+import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.cup.provider.OpendaylightCup;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
+import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
 
 public class CupProviderModule extends org.opendaylight.controller.config.yang.config.cup_provider.impl.AbstractCupProviderModule {
@@ -31,9 +35,30 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
         DataBroker dataBrokerService = getDataBrokerDependency();
         opendaylightCup.setDataProvider(dataBrokerService);
         
+        /**
+         * Register the listener with the DataProviderService
+         * to receive notifications.
+         */
+        final ListenerRegistration<DataChangeListener> dataChangeListenerRegistration = 
+                dataBrokerService.registerDataChangeListener( LogicalDatastoreType.CONFIGURATION, 
+                		OpendaylightCup.CUP_IID, opendaylightCup, DataChangeScope.SUBTREE );
 
+        /**
+         * Register the CupProviderModule via the getRpcRegistryDependency() method that is
+         * in the AbstractCupProviderModule.
+         * 
+         * Effectively, this register the OpenDaylightCup with the RPC registry service.
+         */
         final BindingAwareBroker.RpcRegistration<CupService> rpcRegistration = getRpcRegistryDependency()
                 .addRpcImplementation(CupService.class, opendaylightCup);
+        
+        /**
+         * Register the OpendaylightCup as the CupProviderRuntimeMXBean service. This is
+         * done by via the CupProviderModule class, using the method CupProviderRuntimeRegistrator.
+         */
+        final CupProviderRuntimeRegistration runtimeReg = getRootRuntimeBeanRegistratorWrapper().register(
+               opendaylightCup);
+        
         // Wrap cup as AutoCloseable and close registrations to md-sal at
         // close(). The close method is where you would generally clean up thread pools
         // etc.
@@ -41,8 +66,16 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
 
             @Override
             public void close() throws Exception {
+                // Close the configuration change onDataChanged()
+            	dataChangeListenerRegistration.close();
+            	// Close the cup, the close() method remove the data from the md-sal
+            	// tree via the dataBroker
                 opendaylightCup.close();
+                // Close the RPC methods
                 rpcRegistration.close();
+                // Close the OpendaylightCup that has been registered as
+                // CupProviderRuntimeMXBean
+                runtimeReg.close();
             }
         }
         

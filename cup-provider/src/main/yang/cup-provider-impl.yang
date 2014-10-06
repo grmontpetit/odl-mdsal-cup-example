@@ -4,6 +4,7 @@ module cup-provider-impl {
     prefix "cup-provider-impl";
 
     import config { prefix config; revision-date 2013-04-05"; }
+    import rpc-context { prefix rpcx; revision-date 2013-06-17; }
     import opendaylight-md-sal-binding { prefix mdsal; revision-date 2013-10-28; }
 
     description
@@ -22,7 +23,7 @@ module cup-provider-impl {
             config:java-name-prefix CupProvider;
     }
 
-    // Augments the 'configuration' choice node under modules/module.  
+    // Augments the 'configuration' choice node under modules/module.
     augment "/config:modules/config:module/config:configuration" {
         case cup-provider-impl {
             when "/config:modules/config:module/config:type = 'cup-provider-impl'";
@@ -48,6 +49,34 @@ module cup-provider-impl {
                     }
                 }
             }       
+        }
+    }
+
+    // Augment the 'state' choice node under modules/module
+    augment "/config:modules/config:module/config:state" {
+        case cup-provider-impl {
+            when "/config:modules/config:module/config:type = 'cup-provider-impl'";
+            
+            leaf cups-made {
+                type uint32;
+            }
+            
+            rpcx:rpc-context-instance "clear-cups-made-rpc";
+        }
+    }
+
+    identity clear-cups-made-rpc;
+
+    rpc clear-cups-made  {
+        description
+          "JMX call to clear the cups-made counter.";
+          
+        input {
+            uses rpcx:rpc-context-ref {
+                refine context-instance {
+                    rpcx:rpc-context-instance clear-cups-made-rpc;
+                }
+            }
         }
     }
 }

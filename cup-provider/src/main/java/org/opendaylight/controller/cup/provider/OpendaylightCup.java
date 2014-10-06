@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.opendaylight.controller.config.yang.config.cup_provider.impl.CupProviderRuntimeMXBean;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
@@ -50,7 +51,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
-public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeListener{
+public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeListener, CupProviderRuntimeMXBean{
     //making this public because this unique ID is required later on in other classes.
     public static final InstanceIdentifier<Cup>  CUP_IID = InstanceIdentifier.builder(Cup.class).build();
     private static final Logger LOG = LoggerFactory.getLogger(OpendaylightCup.class);
@@ -67,7 +68,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
 
     private final AtomicLong cupsMade = new AtomicLong(0);
 
-    // Thread safe holder for our darkness multiplier.
+    // Thread safe holder for our temperature multiplier.
     private final AtomicLong cupTemperatureFactor = new AtomicLong( 1000 );
 
     // The following holds the Future for the current heat cup task.
@@ -162,7 +163,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
      */
     @Override
     public Future<RpcResult<Void>> cancelCup() {
-
+        System.out.println("Cancel the cup heating.");
         Future<?> current = currentHeatCupTask.getAndSet(null);
         if (current != null){
             current.cancel(true);
@@ -302,9 +303,9 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
      * the cup, when the cup is at the desired temprature, the
      * function returns null and the tea is ready to be brewed.
      * 
-     * TODO Englishmen drinks the cup, then ths method
+     * TODO Englishmen drinks the cup, then this method
      * sets the cup back to cold. The cup is automatically
-     * filled with cold water readyt o be heated in the
+     * filled with cold water ready to be heated in the
      * microwave.
      */
     private class HeatCupTask implements Callable<Void> {
@@ -325,8 +326,9 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
                 // make cup just sleeps for n seconds per 10 degrees level.
                 long cupTemperature = OpendaylightCup.this.cupTemperature.get();
                 //Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
-                Thread.sleep(cupTemperature * (10)*cupRequest.getCupTemperature());
-                System.out.println("Thread.sleep:"+(cupTemperature * (10)*cupRequest.getCupTemperature()));
+                System.out.println("Heating the cup for:"+(cupTemperature * cupRequest.getCupTemperature())+" mili seconds");
+                Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
+                System.out.println("The cup is ready.");
             }
             catch( InterruptedException e ) {
                 LOG.info( "Interrupted while making the toast" );
@@ -336,7 +338,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
 
             amountOfCupsInStock.getAndDecrement();
             if( outOfCups() ) {
-                LOG.info( "Cup is out of bread!" );
+                LOG.info( "No more cups!" );
 
                 notificationProvider.publish( new NoMoreCupsBuilder().build() );
             }
@@ -420,4 +422,20 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
         }
     }
 
+    /**
+     * Accessor method implemented from the CupProviderRuntimeMXBean interface.
+     */
+	@Override
+	public Long getCupsMade() {
+		return cupsMade.get();
+	}
+
+    /**
+    * JMX RPC call implemented from the CupProviderRuntimeMXBean interface.
+    */
+	@Override
+	public void clearCupsMade() {
+	    LOG.info("clearCupsMade");
+	    cupsMade.set(0);
+	}
 }
