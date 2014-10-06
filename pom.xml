@@ -10,7 +10,7 @@
   <modules>
     <module>cup</module>
     <module>cup-provider</module>
-    <!--module>cup-consumer</module-->
+    <module>cup-consumer</module>
     <!--module>cup-web</module-->
     <module>cup-config</module>
   </modules>

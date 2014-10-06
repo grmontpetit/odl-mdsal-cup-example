@@ -28,7 +28,7 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 ```
 * Compile controller/features/mdsal/pom.xml with mvn clean install
 
-* Run karaf
+* Run karaf -jmx (to access the MBeans through the jconsole)
 
 * Load the base features needed by the cup example: "feature:install odl-base-all"
 

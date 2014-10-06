@@ -436,6 +436,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
 	@Override
 	public void clearCupsMade() {
 	    LOG.info("clearCupsMade");
+	    System.out.println("Clearing the ammount of cups that have been made.");
 	    cupsMade.set(0);
 	}
 }
