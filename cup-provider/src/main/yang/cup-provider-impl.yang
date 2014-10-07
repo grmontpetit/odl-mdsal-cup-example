@@ -1,4 +1,5 @@
 module cup-provider-impl {
+
     yang-version 1;
     namespace "urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl";
     prefix "cup-provider-impl";
