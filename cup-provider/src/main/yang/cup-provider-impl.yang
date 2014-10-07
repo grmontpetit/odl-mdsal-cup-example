@@ -49,6 +49,14 @@ module cup-provider-impl {
                        config:required-identity mdsal:binding-rpc-registry;
                     }
                 }
+            }
+            container notification-service {
+               uses config:service-ref {
+                  refine type {
+                     mandatory true;
+                     config:required-identity mdsal:binding-notification-service;
+                  }
+               }
             }       
         }
     }

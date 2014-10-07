@@ -7,6 +7,8 @@ import org.opendaylight.controller.butler.api.NewsPaperType;
 import org.opendaylight.controller.butler.impl.ButlerServiceImpl;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.TeaType;
+import org.opendaylight.yangtools.concepts.ListenerRegistration;
+import org.opendaylight.yangtools.yang.binding.NotificationListener;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 
 public class ButlerServiceModule extends org.opendaylight.controller.config.yang.config.butler_service.impl.AbstractButlerServiceModule {
@@ -31,6 +33,12 @@ public class ButlerServiceModule extends org.opendaylight.controller.config.yang
         final ButlerServiceImpl butlerService = new ButlerServiceImpl(cupService);
 
         /**
+         * Register the butler as a cupListener
+         */
+        final ListenerRegistration<NotificationListener> cupListenerReg =
+                getNotificationServiceDependency().registerNotificationListener(butlerService);
+        
+        /**
          * Register the ButlerService with JMX
          * and then close it in the AutoCloseable wrapper.
          */
@@ -41,6 +49,7 @@ public class ButlerServiceModule extends org.opendaylight.controller.config.yang
 
             @Override
             public void close() throws Exception {
+                cupListenerReg.close();
                 runtimeReg.close();
             }
 

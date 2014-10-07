@@ -1,7 +1,6 @@
 package org.opendaylight.yang.gen.v1.inocybe.rev141116;
 import java.util.concurrent.Future;
 import org.opendaylight.yangtools.yang.binding.RpcService;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.RestockCupsInput;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
 
@@ -31,16 +30,6 @@ import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
  *     
  *     status CURRENT;
  * }
- * rpc restock-cups {
- *     "Restock the amount of cups with clean cups.";
- *     input {
- *         leaf amountOfCupsToClean {
- *             type uint32;
- *         }
- *     }
- *     
- *     status CURRENT;
- * }
  * </pre>
  */
 public interface CupService
@@ -64,11 +53,6 @@ public interface CupService
      * disabled.
      */
     Future<RpcResult<java.lang.Void>> heatCup(HeatCupInput input);
-    
-    /**
-     * Restock the amount of cups with clean cups.
-     */
-    Future<RpcResult<java.lang.Void>> restockCups(RestockCupsInput input);
 
 }
 

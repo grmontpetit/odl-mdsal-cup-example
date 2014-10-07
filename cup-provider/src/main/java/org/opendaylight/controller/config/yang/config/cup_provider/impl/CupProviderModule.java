@@ -8,8 +8,13 @@ import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataCh
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CupProviderModule extends org.opendaylight.controller.config.yang.config.cup_provider.impl.AbstractCupProviderModule {
+
+    private static final Logger log = LoggerFactory.getLogger(CupProviderModule.class);
+
     public CupProviderModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier, org.opendaylight.controller.config.api.DependencyResolver dependencyResolver) {
         super(identifier, dependencyResolver);
     }
@@ -30,7 +35,7 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
         final OpendaylightCup opendaylightCup = new OpendaylightCup();
 
         // Register to md-sal
-        //opendaylightCup.setNotificationProvider(getNotificationServiceDependency());
+        opendaylightCup.setNotificationProvider(getNotificationServiceDependency());
 
         DataBroker dataBrokerService = getDataBrokerDependency();
         opendaylightCup.setDataProvider(dataBrokerService);
@@ -76,6 +81,7 @@ public class CupProviderModule extends org.opendaylight.controller.config.yang.c
                 // Close the OpendaylightCup that has been registered as
                 // CupProviderRuntimeMXBean
                 runtimeReg.close();
+                log.info("CupProviderModule torn down.");
             }
         }
         

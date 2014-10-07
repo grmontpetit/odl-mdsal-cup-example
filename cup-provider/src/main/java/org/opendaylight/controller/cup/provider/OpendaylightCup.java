@@ -28,9 +28,12 @@ import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.CupStatus;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupBuilder;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestocked;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestockedBuilder;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCupsBuilder;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.RestockCupsInput;
 //import org.opendaylight.yangtools.concepts.Immutable;
 //import org.opendaylight.yangtools.concepts.Path;
 import org.opendaylight.yangtools.yang.binding.DataObject;
@@ -87,6 +90,10 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
                                    .setCupModelNumber( CUP_MODEL_NUMBER )
                                    .setCupStatus( status )
                                    .build();
+    }
+
+    public void setNotificationProvider(NotificationProviderService salService) {
+        this.notificationProvider = salService;
     }
 
     /**
@@ -439,4 +446,19 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
 	    System.out.println("Clearing the ammount of cups that have been made.");
 	    cupsMade.set(0);
 	}
+
+    @Override
+    public Future<RpcResult<Void>> restockCups(RestockCupsInput input) {
+        LOG.info( "restockCups: " + input );
+
+        amountOfCupsInStock.set(input.getAmountOfCupsToClean());
+        
+        if( amountOfCupsInStock.get() > 0 ) {
+            CupsRestocked reStockedNotification =
+                new CupsRestockedBuilder().setAmountOfCups( input.getAmountOfCupsToClean() ).build();
+            notificationProvider.publish( reStockedNotification );
+        }
+        
+        return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+    }
 }

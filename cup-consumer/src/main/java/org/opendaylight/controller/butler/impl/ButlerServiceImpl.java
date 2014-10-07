@@ -10,9 +10,12 @@ import org.opendaylight.controller.butler.api.ButlerService;
 import org.opendaylight.controller.butler.api.NewsPaperType;
 import org.opendaylight.controller.config.yang.config.butler_service.impl.ButlerServiceRuntimeMXBean;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.BlackTea;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupListener;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestocked;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInputBuilder;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCups;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.TeaType;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
@@ -30,7 +33,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXBean{
+public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXBean, CupListener{
 
     private static final Logger log = LoggerFactory.getLogger(ButlerServiceImpl.class);
 
@@ -150,5 +153,17 @@ public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXB
         }
   
         return Boolean.FALSE;
+    }
+
+    @Override
+    public void onCupsRestocked(CupsRestocked notification) {
+        log.info( "CupRestocked notification - amountOfCups: " + notification.getAmountOfCups() );
+        outOfCups = false;
+    }
+
+    @Override
+    public void onNoMoreCups(NoMoreCups notification) {
+        log.info("Out of clean cups");
+        outOfCups = true;
     }
 }

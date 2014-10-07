@@ -1,5 +1,4 @@
 package org.opendaylight.yang.gen.v1.inocybe.rev141116;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestocked;
 import org.opendaylight.yangtools.yang.binding.NotificationListener;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCups;
 
@@ -8,14 +7,6 @@ import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCups;
  * Interface for receiving the following YANG notifications defined in module <b>cup</b>
  * <br />(Source path: <i>META-INF/yang/cup.yang</i>):
  * <pre>
- * notification cupsRestocked {
- *     description
- *         "Indicates that there are no more cups.";
- *     leaf amountOfCups {
- *         type uint32;
- *     }
- *     status CURRENT;
- * }
  * notification noMoreCups {
  *     description
  *         "Indicates that there are no available cups to make tea.";
@@ -31,11 +22,6 @@ public interface CupListener
 
 
 
-    /**
-     * Indicates that there are no more cups.
-     */
-    void onCupsRestocked(CupsRestocked notification);
-    
     /**
      * Indicates that there are no available cups to make tea.
      */

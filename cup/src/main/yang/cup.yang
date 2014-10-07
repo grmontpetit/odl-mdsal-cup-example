@@ -9,7 +9,7 @@ module cup {
     organization "Inocybe";
 
     contact
-      "Gabriel Robitaille-Montpetit <grmontpetit@inocybe.com>";
+      "Gabriel Robitaille-Montpetit <grmontpetit@gmail.com>";
 
     description
       "YANG version of the TEA-MIB.";
@@ -135,8 +135,32 @@ module cup {
           if the cup service is disabled.";
     }  // rpc cancel-cup
 
+    rpc restock-cups {
+       description
+         "Restock the amount of cups with clean cups.";
+
+       input {
+           leaf amountOfCupsToClean {
+               type uint32;
+               description
+                 "Indicates the amount of cups to clean.";
+           }
+       }
+    } // restock-cups
+
     notification noMoreCups {
       description
         "Indicates that there are no available cups to make tea.";
     }  // notification noMoreCups
+ 
+   notification cupsRestocked {
+     description
+       "Indicates that there are no more cups.";
+     leaf amountOfCups {
+       type uint32;
+       description
+         "Indicates the amount of cups that was re-stocked";
+     }
+   }  // notification cupsRestocked
+
 } // module cup
