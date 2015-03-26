@@ -3,6 +3,8 @@ odl-mdsal-cup-example
 
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 
+## The project is undergoing a refactor, which includes a distribution, up to date maven artifacts and a features file.
+
 ## Karaf integration
 
 * Modify the controller/opendaylight/commons/opendaylight/pom.xml file and add the following line in the properties section:
