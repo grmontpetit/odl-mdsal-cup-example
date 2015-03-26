@@ -2,17 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.opendaylight.controller</groupId>
+  <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>cup</module>
     <module>cup-provider</module>
     <module>cup-consumer</module>
-    <!--module>cup-web</module-->
     <module>cup-config</module>
+<!--     <module>cup-features</module> -->
+<!--     <module>cup-karaf</module> -->
   </modules>
 
   <properties>
@@ -31,6 +32,9 @@
     <mdsal.version>1.1-SNAPSHOT</mdsal.version>
     <ietf-inet-types.version>2010.09.24.4-SNAPSHOT</ietf-inet-types.version>
     <ietf-yang-types.version>2010.09.24.4-SNAPSHOT</ietf-yang-types.version>
+    <karaf.branding.version>1.1.0-SNAPSHOT</karaf.branding.version>
+    <karaf.resources.version>1.5.0-SNAPSHOT</karaf.resources.version>
+    <karaf.version>3.0.1</karaf.version>
     <spring.version>3.1.3.RELEASE</spring.version>
     <jackson.version>1.9.10</jackson.version>
     <jacoco.version>0.7.2.201409121644</jacoco.version>

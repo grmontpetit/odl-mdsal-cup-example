@@ -1,0 +1,11 @@
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<?xml version="1.0" encoding="UTF-8"?>
+    <feature name='odl-cup' version='${project.version}' description="OpenDaylight :: Cup">
+        <feature version='${yangtools.version}'>odl-yangtools-common</feature>
+        <feature version='${yangtools.version}'>odl-yangtools-binding</feature>
+        <feature version='${project.version}'>odl-mdsal-broker</feature>
+        <bundle>mvn:org.opendaylight.controller/cup/${project.version}</bundle>
+        <bundle>mvn:org.opendaylight.controller/cup-consumer/${project.version}</bundle>
+        <bundle>mvn:org.opendaylight.controller/cup-provider/${project.version}</bundle>
+        <configfile finalname="${config.configfile.directory}/${config.cup.configfile}">mvn:org.opendaylight.controller/cup-config/${project.version}/xml/config</configfile>
+    </feature>
