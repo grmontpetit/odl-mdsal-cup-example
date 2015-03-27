@@ -61,70 +61,17 @@
       <version>${karaf.resources.version}</version>
     </dependency>
 
-<!--     integration feature -->
-<!--     <dependency> -->
-<!--       <artifactId>features-integration-index</artifactId> -->
-<!--       <groupId>org.opendaylight.integration</groupId> -->
-<!--       <version>${project.version}</version> -->
-<!--       <classifier>features</classifier> -->
-<!--       <type>xml</type> -->
-<!--       <scope>runtime</scope> -->
-<!--     </dependency> -->
-
-<!--     integration test feature -->
-<!--     <dependency> -->
-<!--       <artifactId>features-integration-test</artifactId> -->
-<!--       <groupId>org.opendaylight.integration</groupId> -->
-<!--       <version>${project.version}</version> -->
-<!--       <classifier>features</classifier> -->
-<!--       <type>xml</type> -->
-<!--       <scope>test</scope> -->
-<!--     </dependency> -->
-
-    <!-- External application -->
+    <!-- cup feature -->
     <dependency>
-      <groupId>org.opendaylight.vtn</groupId>
-      <artifactId>distribution.vtn-coordinator</artifactId>
-      <version>6.0.0.0-SNAPSHOT</version>
-      <type>tar.bz2</type>
-      <classifier>bin</classifier>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-        </exclusion>
-      </exclusions>
+      <artifactId>cup-features</artifactId>
+      <groupId>org.opendaylight.sample</groupId>
+      <version>${project.version}</version>
+      <classifier>features</classifier>
+      <type>xml</type>
+      <scope>system</scope>
+      <systemPath>${features.file.location}/${features.file.jar.name}</systemPath>
     </dependency>
 
-    <dependency>
-      <groupId>org.opendaylight.vtn</groupId>
-      <artifactId>distribution.vtn-coordinator</artifactId>
-      <version>6.0.0.0-SNAPSHOT</version>
-      <type>txt</type>
-      <classifier>README</classifier>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
 
   <build>
