@@ -3,9 +3,14 @@ odl-mdsal-cup-example
 
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 
-## The project is undergoing a refactor, which includes a distribution, up to date maven artifacts and a features file.
+## Using the project
+There is a karaf distribution that has been included as well as a feature file to load the required features. To use the project, compile it then extract the tar.gz located in the /cup-karaf/target folder. To run karaf, use the bin/karaf of the extracted archive to lauch it. Once you have the karaf shell, input feature:install odl-cup to install the project and use it.
 
-## Karaf integration
+## Using JMX
+To use JMX, run karaf with the jmx tag:
+karaf -jmx
+
+## Karaf integration (this section is deprecated)
 
 * Modify the controller/opendaylight/commons/opendaylight/pom.xml file and add the following line in the properties section:
 
