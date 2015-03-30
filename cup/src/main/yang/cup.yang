@@ -53,14 +53,14 @@ module cup {
       presence
         "Indicate that the cup service is available.";
       description
-        "Top-level container for all toaster database objects.";
+        "Top-level container for all cup database objects.";
 
       leaf cupManufacturer {
         type DisplayString;
         config false;
         mandatory true;
         description
-          "The name of the cup's manufacturer. For instance China.";
+          "The name of the cup's manufacturer. For instance Acme inc..";
       }
 
       leaf cupModelNumber {
@@ -127,7 +127,7 @@ module cup {
       }// input
     }
     
-    // action to cancel making toast - takes no input parameters
+    // action to cancel making cup - takes no input parameters
     rpc cancel-cup {
       description
         "Stop heating the cup, if any is being made.

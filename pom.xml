@@ -284,11 +284,4 @@
       <url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
     </pluginRepository>
   </pluginRepositories>
-
-  <scm>
-    <connection>scm:git:ssh://git.opendaylight.org:29418/controller.git</connection>
-    <developerConnection>scm:git:ssh://git.opendaylight.org:29418/controller.git</developerConnection>
-    <url>https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL</url>
-    <tag>HEAD</tag>
-  </scm>
 </project>

@@ -60,7 +60,7 @@
         <version>${surefire.version}</version>
         <configuration>
           <systemPropertyVariables>
-            <karaf.distro.groupId>org.opendaylight.controller</karaf.distro.groupId>
+            <karaf.distro.groupId>org.opendaylight.sample</karaf.distro.groupId>
             <karaf.distro.artifactId>opendaylight-karaf-empty</karaf.distro.artifactId>
             <karaf.distro.version>${karaf.empty.version}</karaf.distro.version>
           </systemPropertyVariables>
