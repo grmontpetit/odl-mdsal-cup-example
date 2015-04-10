@@ -20,27 +20,6 @@
 
   <dependencies>
     <dependency>
-      <!-- scope is compile so all features (there is only one) are installed
-            into startup.properties and the feature repo itself is not installed -->
-      <groupId>org.apache.karaf.features</groupId>
-      <artifactId>framework</artifactId>
-      <version>${karaf.version}</version>
-      <type>kar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>org.osgi</groupId>
-          <artifactId>org.osgi.core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.sshd</groupId>
-          <artifactId>sshd-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- scope is runtime so the feature repo is listed in the features
-      service config file, and features may be installed using the
-      karaf-maven-plugin configuration -->
-    <dependency>
       <groupId>org.apache.karaf.features</groupId>
       <artifactId>standard</artifactId>
       <version>${karaf.version}</version>
