@@ -72,7 +72,6 @@
       <classifier>features</classifier>
       <type>xml</type>
       <scope>runtime</scope>
-<!--       <systemPath>${features.file.location}/${features.file.jar.name}</systemPath> -->
     </dependency>
 
   </dependencies>
