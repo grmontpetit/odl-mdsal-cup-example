@@ -10,6 +10,10 @@
   <artifactId>cup-karaf</artifactId>
   <packaging>pom</packaging>
 
+  <prerequisites>
+    <maven>3.1.1</maven>
+  </prerequisites>
+
   <properties>
     <branding.version>1.1.0-SNAPSHOT</branding.version>
     <karaf.resources.version>1.5.0-SNAPSHOT</karaf.resources.version>
@@ -68,7 +72,7 @@
       <version>${project.version}</version>
       <classifier>features</classifier>
       <type>xml</type>
-      <scope>provided</scope>
+      <scope>compile</scope>
 <!--       <systemPath>${features.file.location}/${features.file.jar.name}</systemPath> -->
     </dependency>
 

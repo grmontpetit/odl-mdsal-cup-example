@@ -1,4 +1,3 @@
-<!-- vi: set et smarttab sw=4 tabstop=4: -->
 <?xml version="1.0" encoding="UTF-8"?>
 <features name="odl-cup-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
