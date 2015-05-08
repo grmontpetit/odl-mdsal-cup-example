@@ -1,8 +1,7 @@
 odl-mdsal-cup-example
 =====================
 
-## The project is still having problems with the distribution but the rest should work fine.
-
+## About
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 
 ## Pre-requisite
@@ -10,7 +9,24 @@ This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 - Maven 3.2.5+
 
 ## Using the project
-There is a karaf distribution that has been included as well as a feature file to load the required features. To use the project, compile it then extract the tar.gz located in the /cup-karaf/target folder. To run karaf, use the bin/karaf of the extracted archive to lauch it. Once you have the karaf shell, input feature:install odl-cup to install the project and use it.
+1. Compile the whole project
+2. Once the compilation is finished, cd into the cup-karaf/target folder
+3. Depending on your operating system, extract the cup-karaf-0.1.0-SNAPSHOT.tar.gz
+4. Run the the cup-karaf-0.1.0-SNAPSHOT/bin/karaf binary
+5. The feature odl-cup should be loaded automatically, you can check with:
+```
+
+feature:list | grep odl-cup
+
+```
+6. Additionally, you can check the status of the bundles, logs and bundle diagnostic with these:
+```
+bundle:list | grep cup
+log:display
+bundle:diag
+
+```
+7. Check https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation for how to use the project.
 
 ## Using JMX
 To use JMX, run karaf with the jmx tag:
