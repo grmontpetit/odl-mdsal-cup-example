@@ -5,7 +5,7 @@
             <modules xmlns="urn:opendaylight:params:xml:ns:yang:controller:config">
                 <module>
                     <type xmlns:cup="urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl">
-                    ovsdb-northbound:cup-provider-impl
+                    cup:cup-provider-impl
                     </type>
                     <name>cup-provider-impl</name>
 

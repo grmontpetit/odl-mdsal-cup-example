@@ -6,11 +6,12 @@
     <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
     <repository>mvn:org.opendaylight.controller/features-config/${config.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.controller/features-restconf/${mdsal.version}/xml/features</repository>
 
     <feature name='odl-cup' version='${project.version}' description="OpenDaylight :: Cup">
-        <feature version='${yangtools.version}'>odl-yangtools-common</feature>
-        <feature version='${yangtools.version}'>odl-yangtools-binding</feature>
         <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
+        <feature version="${mdsal.version}">odl-restconf</feature>
+        <bundle>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.opendaylight.sample/cup/${project.version}</bundle>
         <bundle>mvn:org.opendaylight.sample/cup-consumer/${project.version}</bundle>
         <bundle>mvn:org.opendaylight.sample/cup-provider/${project.version}</bundle>
