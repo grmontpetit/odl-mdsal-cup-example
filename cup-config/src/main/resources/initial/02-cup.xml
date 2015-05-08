@@ -5,7 +5,7 @@
             <modules xmlns="urn:opendaylight:params:xml:ns:yang:controller:config">
                 <module>
                     <type xmlns:cup="urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl">
-                    cup:cup-provider-impl
+                    ovsdb-northbound:cup-provider-impl
                     </type>
                     <name>cup-provider-impl</name>
 
@@ -50,17 +50,17 @@
             </modules>
             
             <services xmlns="urn:opendaylight:params:xml:ns:yang:controller:config">
-                // This service section tells the config subsystem to advertise the OSGi service.
+                <!-- This service section tells the config subsystem to advertise the OSGi service. -->
                 <service>
-                    // The type specifies the interface type of the service
+                    <!-- The type specifies the interface type of the service -->
                     <type xmlns:butler="urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl">
                         butler:butler-service
                     </type>
-                    // Specifies the service instance information
+                    <!-- Specifies the service instance information -->
                     <instance>
-                        // Specifies a unique service name
+                        <!-- Specifies a unique service name -->
                         <name>butler-service</name>
-                        // Specifies the path of the form
+                        <!-- Specifies the path of the form -->
                         <provider>/modules/module[type='butler-service-impl'][name='butler-service-impl']</provider>
                     </instance>
                 </service>
