@@ -18,7 +18,7 @@
   </prerequisites>
 
   <properties>
-    <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
+    <yangtools.version>0.7.0-SNAPSHOT</yangtools.version>
   </properties>
 
   <build>

@@ -15,19 +15,24 @@ The project has its own distribution of karaf included and the features are load
 3. Depending on your operating system, extract the cup-karaf-0.1.0-SNAPSHOT.tar.gz
 4. Run the the cup-karaf-0.1.0-SNAPSHOT/bin/karaf binary
 5. The feature odl-cup should be loaded automatically, you can check with:
+
 ```
 
 feature:list | grep odl-cup
 
 ```
-6. Additionally, you can check the status of the bundles, logs and bundle diagnostic with these:
+
+## Aditionnal debugging tools
+You can check the status of the bundles, logs and bundle diagnostic with these:
 ```
 bundle:list | grep cup
 log:display
 bundle:diag
 
 ```
-7. Check https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation for how to use the project.
+## RESTConf Endpoints
+The endpoints have been documented here:
+https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation for how to use the project.
 
 ## Using JMX
 To use JMX, run karaf with the jmx tag:
