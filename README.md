@@ -13,9 +13,9 @@ The next iteration will be completely standalone, using artefacts from odlparent
 ## Pre-requisite
 - Java JDK 1.7
 - Maven 3.2.5+
-- odlparent (cloned and compiled)
-- yangtools (cloned and compiled)
-- controller (cloned and compiled)
+- odlparent ([https://git.opendaylight.org/gerrit/#/admin/projects/odlparent](cloned) and compiled)
+- yangtools ([https://git.opendaylight.org/gerrit/#/admin/projects/yangtools](cloned) and compiled)
+- controller ([https://git.opendaylight.org/gerrit/#/admin/projects/controller](cloned) and compiled)
 
 ## Using the project
 1. Compile the whole project
@@ -46,7 +46,8 @@ opendaylight-user@root>bundle:diag
 ```
 ## RESTConf Endpoints
 The endpoints have been documented here:
-https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation for how to use the project.
+
+[https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation](Cup-Endpoints)
 
 I recomment using a Rest client such as Postman or Advanced Rest Client (both for google chrome).
 
