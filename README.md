@@ -4,10 +4,18 @@ odl-mdsal-cup-example
 ## About
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 The project has its own distribution of karaf included and the features are loaded automatically on startup.
+The project has been updated to be closer to Berylium than to Lithium.
+
+## Improvements
+The current version is its own standalone distribution and the cup project is loaded on startup.
+The next iteration will be completely standalone, using artefacts from odlparent, yangtools and controller. This means there will not be a need to download and compile those 3 projects before beign able to use the cup project.
 
 ## Pre-requisite
 - Java JDK 1.7
 - Maven 3.2.5+
+- odlparent (cloned and compiled)
+- yangtools (cloned and compiled)
+- controller (cloned and compiled)
 
 ## Using the project
 1. Compile the whole project
@@ -18,21 +26,29 @@ The project has its own distribution of karaf included and the features are load
 
 ```
 
-feature:list | grep odl-cup
+opendaylight-user@root>feature:list | grep cup
+odl-cup                         | 0.1.0-SNAPSHOT   | x         | odl-cup-0.1.0-SNAPSHOT                | OpenDaylight :: Cup
 
 ```
 
 ## Aditionnal debugging tools
 You can check the status of the bundles, logs and bundle diagnostic with these:
 ```
-bundle:list | grep cup
-log:display
-bundle:diag
+opendaylight-user@root>bundle:list | grep cup
+198 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup                                                                      
+199 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup-consumer                                                             
+200 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup-provider  
+
+opendaylight-user@root>log:display
+
+opendaylight-user@root>bundle:diag
 
 ```
 ## RESTConf Endpoints
 The endpoints have been documented here:
 https://github.com/sniggel/odl-mdsal-cup-example/wiki/odl-mdsal-cup-example-documentation for how to use the project.
+
+I recomment using a Rest client such as Postman or Advanced Rest Client (both for google chrome).
 
 ## Using JMX
 To use JMX, run karaf with the jmx tag:
