@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <groupId>org.opendaylight.yangtools</groupId>
-    <artifactId>binding-parent</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
-    <relativePath/>
-  </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.opendaylight.sample</groupId>
-  <artifactId>cup</artifactId>
+  <parent>
+    <groupId>org.opendaylight.sample</groupId>
+    <artifactId>cup-aggregator</artifactId>
+    <version>0.1.1-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+
+  <artifactId>cup-branding</artifactId>
   <version>0.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
-
+  <name>${project.artifactId}</name>
    <!-- Minimal maven version to use. -->
   <prerequisites>
     <maven>3.1.1</maven>
@@ -35,5 +35,25 @@
       <url>https://github.com/sniggel</url>
    </developer>
   </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.4.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Import-Package>*</Import-Package>
+            <Private-Package>!*</Private-Package>
+            <Export-Package>org.apache.karaf.branding</Export-Package>
+            <Spring-Context>*;public-context:=false</Spring-Context>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

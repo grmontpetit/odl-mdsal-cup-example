@@ -22,14 +22,14 @@ The next iteration will be completely standalone, using artefacts from odlparent
 ## Using the project
 1. Compile the whole project
 2. Once the compilation is finished, cd into the cup-karaf/target folder
-3. Depending on your operating system, extract the cup-karaf-0.1.0-SNAPSHOT.tar.gz
+3. Depending on your operating system, extract the cup-karaf-0.1.1-SNAPSHOT.tar.gz
 4. Run the the cup-karaf-0.1.0-SNAPSHOT/bin/karaf binary
 5. The feature odl-cup should be loaded automatically, you can check with (an x in the 3rd column indicates that the feature is installed):
 
 ```
 
 opendaylight-user@root>feature:list | grep cup
-odl-cup                         | 0.1.0-SNAPSHOT   | x         | odl-cup-0.1.0-SNAPSHOT                | OpenDaylight :: Cup
+odl-cup                         | 0.1.1-SNAPSHOT   | x         | odl-cup-0.1.1-SNAPSHOT                | OpenDaylight :: Cup
 
 ```
 
@@ -37,9 +37,9 @@ odl-cup                         | 0.1.0-SNAPSHOT   | x         | odl-cup-0.1.0-S
 You can check the status of the bundles, logs and bundle diagnostic with these:
 ```
 opendaylight-user@root>bundle:list | grep cup
-198 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup                                                                      
-199 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup-consumer                                                             
-200 | Active   |  80 | 0.1.0.SNAPSHOT                            | cup-provider  
+198 | Active   |  80 | 0.1.1.SNAPSHOT                            | cup                                                                      
+199 | Active   |  80 | 0.1.1.SNAPSHOT                            | cup-consumer                                                             
+200 | Active   |  80 | 0.1.1.SNAPSHOT                            | cup-provider  
 
 opendaylight-user@root>log:display
 

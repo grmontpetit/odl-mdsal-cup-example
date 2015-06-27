@@ -10,7 +10,7 @@
 
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-aggregator</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <packaging>pom</packaging>
 
@@ -48,6 +48,7 @@
     <module>cup-config</module>
     <module>cup-features</module>
     <module>cup-artifacts</module>
+    <module>cup-branding</module>
     <module>cup-karaf</module>
   </modules>
 
