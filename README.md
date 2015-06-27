@@ -17,7 +17,7 @@ The next iteration will be completely standalone, using artefacts from odlparent
 - yangtools ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/yangtools) and compiled)
 - controller ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/controller) and compiled)
 
-** Make sure you are using the master branch as the cup project is using berylium artefacts.
+** Make sure you are using the master branch as the cup project is using berylium artifacts.**
 
 ## Using the project
 1. Compile the whole project
