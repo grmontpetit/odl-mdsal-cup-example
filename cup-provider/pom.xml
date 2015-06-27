@@ -1,51 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.opendaylight.controller</groupId>
+    <artifactId>config-parent</artifactId>
+    <version>0.4.0-SNAPSHOT</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>org.opendaylight.sample</groupId>
+  <artifactId>cup-provider</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+
+   <!-- Minimal maven version to use. -->
+  <prerequisites>
+    <maven>3.1.1</maven>
+  </prerequisites>
+
+  <!-- Metadata -->
+  <description>This project is a revisit of the toaster Step-by-Step which helped me learn OpenDaylight. Instead of using a Toaster, it uses teas and cups.</description>
+  <url>https://github.com/sniggel</url>
+  <!-- More metadata -->
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Gabriel Robitaille-Montpetit</name>
+      <email>grmontpetit@gmail.com</email>
+      <url>https://github.com/sniggel</url>
+   </developer>
+  </developers>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>cup</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.opendaylight.controller</groupId>
-      <artifactId>config-parent</artifactId>
-      <version>0.4.0-SNAPSHOT</version>
-      <relativePath/>
-    </parent>
-
-    <groupId>org.opendaylight.sample</groupId>
-    <artifactId>cup-provider</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-    <packaging>bundle</packaging>
-
-    <prerequisites>
-      <maven>3.1.1</maven>
-    </prerequisites>
-  
-    <properties>
-      <sal-binding-api.version>1.1-SNAPSHOT</sal-binding-api.version>
-    </properties>
-
-    <dependencies>
-      <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>cup</artifactId>
-          <version>${project.version}</version>
+      <artifactId>config-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>sal-binding-api</artifactId>
       </dependency>
-      <dependency>
-        <groupId>org.opendaylight.controller</groupId>
-        <artifactId>config-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.opendaylight.controller</groupId>
-        <artifactId>sal-binding-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.opendaylight.controller</groupId>
-        <artifactId>sal-binding-config</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.opendaylight.controller</groupId>
-        <artifactId>sal-common-util</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.core</artifactId>
-      </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>sal-binding-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>sal-common-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+    </dependency>
+  </dependencies>
 </project>

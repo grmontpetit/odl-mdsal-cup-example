@@ -17,12 +17,14 @@ The next iteration will be completely standalone, using artefacts from odlparent
 - yangtools ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/yangtools) and compiled)
 - controller ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/controller) and compiled)
 
+** Make sure you are using the master branch as the cup project is using berylium artefacts.
+
 ## Using the project
 1. Compile the whole project
 2. Once the compilation is finished, cd into the cup-karaf/target folder
 3. Depending on your operating system, extract the cup-karaf-0.1.0-SNAPSHOT.tar.gz
 4. Run the the cup-karaf-0.1.0-SNAPSHOT/bin/karaf binary
-5. The feature odl-cup should be loaded automatically, you can check with:
+5. The feature odl-cup should be loaded automatically, you can check with (an x in the 3rd column indicates that the feature is installed):
 
 ```
 
@@ -44,6 +46,14 @@ opendaylight-user@root>log:display
 opendaylight-user@root>bundle:diag
 
 ```
+
+## Common gotchas
+The two gotchas that I noticed when compiling the project:
+
+- Compile controller/opendaylight/config (config-parent) separately.
+
+- Compile controller/karaf/karaf-parent (karaf-parent) separately.
+
 ## RESTConf Endpoints
 The endpoints have been documented here:
 

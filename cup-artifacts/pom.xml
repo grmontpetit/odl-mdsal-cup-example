@@ -7,6 +7,35 @@
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+   <!-- Minimal maven version to use. -->
+  <prerequisites>
+    <maven>3.1.1</maven>
+  </prerequisites>
+
+  <!-- Metadata -->
+  <description>This project is a revisit of the toaster Step-by-Step which helped me learn OpenDaylight. Instead of using a Toaster, it uses teas and cups.</description>
+  <url>https://github.com/sniggel</url>
+  <!-- More metadata -->
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Gabriel Robitaille-Montpetit</name>
+      <email>grmontpetit@gmail.com</email>
+      <url>https://github.com/sniggel</url>
+   </developer>
+  </developers>
+
+  <!--
+  Dependencies management lets you
+  define global project dependencies
+  that can be used throughout the project
+  scope
+  -->
   <dependencyManagement>
     <dependencies>
       <dependency>

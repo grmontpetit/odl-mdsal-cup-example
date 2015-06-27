@@ -7,16 +7,41 @@
     <version>1.6.0-SNAPSHOT</version>
     <relativePath/>
   </parent>
+
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-features</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <description>Feature file for the cup service</description>
   <packaging>jar</packaging>
   <modelVersion>4.0.0</modelVersion>
+
+   <!-- Minimal maven version to use. -->
   <prerequisites>
     <maven>3.1.1</maven>
   </prerequisites>
 
+  <!-- Metadata -->
+  <description>This project is a revisit of the toaster Step-by-Step which helped me learn OpenDaylight. Instead of using a Toaster, it uses teas and cups. This sub-project is used to deploy the cup into the karaf container
+  by using the feature:install command.</description>
+  <url>https://github.com/sniggel</url>
+  <!-- More metadata -->
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Gabriel Robitaille-Montpetit</name>
+      <email>grmontpetit@gmail.com</email>
+      <url>https://github.com/sniggel</url>
+   </developer>
+  </developers>
+
+  <!-- 
+  Sub-project properties can be accessed as variables within the
+  sub-project scope.
+  -->
   <properties>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <config.version>0.4.0-SNAPSHOT</config.version>
@@ -24,6 +49,12 @@
     <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
   </properties>
 
+  <!--
+  Dependencies management lets you
+  define global project dependencies
+  that can be used throughout the project
+  scope
+  -->
   <dependencyManagement>
     <dependencies>
       <!-- project specific dependencies -->
@@ -97,64 +128,4 @@
       <artifactId>guava</artifactId>
      </dependency>
   </dependencies>
-
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>filter</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>resources</goal>
-            </goals>
-            </execution>
-          </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-artifacts</id>
-            <goals>
-              <goal>attach-artifact</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <file>${project.build.directory}/classes/${features.file}</file>
-                  <type>xml</type>
-                  <classifier>features</classifier>
-                </artifact>
-              </artifacts>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemPropertyVariables>
-            <karaf.distro.groupId>org.opendaylight.sample</karaf.distro.groupId>
-            <karaf.distro.artifactId>opendaylight-karaf-empty</karaf.distro.artifactId>
-            <karaf.distro.version>${karaf.empty.version}</karaf.distro.version>
-          </systemPropertyVariables>
-          <dependenciesToScan>
-            <dependency>org.opendaylight.yangtools:features-test</dependency>
-          </dependenciesToScan>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
