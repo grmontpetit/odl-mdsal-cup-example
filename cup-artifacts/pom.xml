@@ -50,6 +50,21 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>cup-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+<!--       <dependency> -->
+<!--         <groupId>${project.groupId}</groupId> -->
+<!--         <artifactId>karaf-branding</artifactId> -->
+<!--         <version>${project.version}</version> -->
+<!--       </dependency> -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cup-aggregator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>cup-features</artifactId>
         <version>${project.version}</version>
         <classifier>features</classifier>

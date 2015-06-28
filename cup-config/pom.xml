@@ -17,5 +17,10 @@
   <prerequisites>
     <maven>3.1.1</maven>
   </prerequisites>
-
+  <dependencies>
+    <dependency>
+      <groupId>org.opendaylight.controller</groupId>
+      <artifactId>config-persister-file-xml-adapter</artifactId>
+    </dependency>
+  </dependencies>
 </project>

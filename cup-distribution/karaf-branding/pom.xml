@@ -2,24 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.opendaylight.sample</groupId>
-    <artifactId>cup-aggregator</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
-    <relativePath>../</relativePath>
-  </parent>
+    <parent>
+      <groupId>org.opendaylight.sample</groupId>
+      <artifactId>cup-distribution</artifactId>
+      <version>0.1.1-SNAPSHOT</version>
+      <relativePath>../</relativePath>
+    </parent>
 
-  <artifactId>cup-branding</artifactId>
+  <artifactId>karaf-branding</artifactId>
   <version>0.1.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>${project.artifactId}</name>
-   <!-- Minimal maven version to use. -->
+
+  <!-- Metadata -->
+  <description>This project is a revisit of the toaster Step-by-Step which helped me learn OpenDaylight. Instead of using a Toaster, it uses teas and cups.</description>
+
+  <!-- Minimal maven version to use. -->
   <prerequisites>
     <maven>3.1.1</maven>
   </prerequisites>
 
-  <!-- Metadata -->
-  <description>This project is a revisit of the toaster Step-by-Step which helped me learn OpenDaylight. Instead of using a Toaster, it uses teas and cups.</description>
   <url>https://github.com/sniggel</url>
   <!-- More metadata -->
   <licenses>
@@ -33,7 +35,7 @@
       <name>Gabriel Robitaille-Montpetit</name>
       <email>grmontpetit@gmail.com</email>
       <url>https://github.com/sniggel</url>
-   </developer>
+    </developer>
   </developers>
 
   <build>
@@ -41,7 +43,6 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.4.0</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>

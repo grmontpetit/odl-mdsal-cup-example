@@ -48,8 +48,7 @@
     <module>cup-config</module>
     <module>cup-features</module>
     <module>cup-artifacts</module>
-    <module>cup-branding</module>
-    <module>cup-karaf</module>
+    <module>cup-distribution</module>
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
