@@ -52,9 +52,9 @@
 
     <!-- ODL Branding -->
     <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>karaf.branding</artifactId>
-      <version>${branding.version}</version>
+      <groupId>org.opendaylight.sample</groupId>
+      <artifactId>cup-branding</artifactId>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
 
