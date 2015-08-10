@@ -74,12 +74,12 @@ module cup {
       leaf cupStatus {
         type enumeration {
           enum "cold" {
-            value 1;
+            value 0;
             description
               "The water in the cup is cold.";
           }
           enum "heating" {
-            value 2;
+            value 1;
             description
               "The water is being heated in the microwave.";
           }
@@ -96,6 +96,21 @@ module cup {
         description
           "The cup water temperature factor. Basically, the number of ms to multiple the temperature value by.";
       }
+
+      leaf ammount-of-cups-in-stock {
+        type uint32;
+        default 5;
+        description
+          "The ammount of cups available.";
+      }
+      
+      leaf ammount-of-cups-made {
+        type uint32;
+        default 0;
+        description
+          "The ammount of cups that have been made so far.";
+      }
+
     }// container cup
     
     rpc heat-cup {
@@ -143,7 +158,7 @@ module cup {
            leaf amountOfCupsToClean {
                type uint32;
                description
-                 "Indicates the amount of cups to clean.";
+                 "IndiccupsMadeates the amount of cups to clean.";
            }
        }
     } // restock-cups

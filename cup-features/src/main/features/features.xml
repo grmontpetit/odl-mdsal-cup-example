@@ -13,8 +13,8 @@
         <feature version="${mdsal.version}">odl-restconf</feature>
         <bundle>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.opendaylight.sample/cup/${project.version}</bundle>
-        <bundle>mvn:org.opendaylight.sample/cup-consumer/${project.version}</bundle>
         <bundle>mvn:org.opendaylight.sample/cup-provider/${project.version}</bundle>
+<!--         <bundle>mvn:org.opendaylight.sample/cup-consumer/${project.version}</bundle> -->
         <configfile finalname="${configfile.directory}/02-cup.xml">mvn:org.opendaylight.sample/cup-config/${project.version}/xml/config</configfile>
     </feature>
 </features>

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-artifacts</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
    <!-- Minimal maven version to use. -->
@@ -53,14 +53,19 @@
         <artifactId>cup-config</artifactId>
         <version>${project.version}</version>
       </dependency>
-<!--       <dependency> -->
-<!--         <groupId>${project.groupId}</groupId> -->
-<!--         <artifactId>karaf-branding</artifactId> -->
-<!--         <version>${project.version}</version> -->
-<!--       </dependency> -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>karaf-branding</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>cup-aggregator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>karaf-branding</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

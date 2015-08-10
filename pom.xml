@@ -10,7 +10,7 @@
 
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-aggregator</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <packaging>pom</packaging>
 
@@ -44,7 +44,7 @@
   <modules>
     <module>cup</module>
     <module>cup-provider</module>
-    <module>cup-consumer</module>
+    <!--module>cup-consumer</module-->
     <module>cup-config</module>
     <module>cup-features</module>
     <module>cup-artifacts</module>

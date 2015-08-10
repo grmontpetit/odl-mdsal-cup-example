@@ -15,10 +15,10 @@
                         <name>binding-rpc-broker</name>
                     </rpc-registry>
 
-                    <data-broker>
-                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-async-data-broker</type>
-                        <name>binding-data-broker</name>
-                    </data-broker>
+                   <broker>
+                     <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-broker-osgi-registry</type>
+                     <name>binding-osgi-broker</name>
+                   </broker>
 
                     <notification-service>
                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">
@@ -28,49 +28,49 @@
                     </notification-service>
 
                 </module>
-                <module>
-                    <type xmlns:butler="urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl">
-                        butler:butler-service-impl
-                    </type>
-                    <name>butler-service-impl</name>
+<!--                 <module> -->
+<!--                     <type xmlns:butler="urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl"> -->
+<!--                         butler:butler-service-impl -->
+<!--                     </type> -->
+<!--                     <name>butler-service-impl</name> -->
 
-                    <rpc-registry>
-                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-rpc-registry</type>
-                        <name>binding-rpc-broker</name>
-                    </rpc-registry>
+<!--                     <rpc-registry> -->
+<!--                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-rpc-registry</type> -->
+<!--                         <name>binding-rpc-broker</name> -->
+<!--                     </rpc-registry> -->
 
-                    <notification-service>
-                        <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">
-                            binding:binding-notification-service
-                        </type>
-                        <name>binding-notification-broker</name>
-                    </notification-service>
+<!--                     <notification-service> -->
+<!--                         <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding"> -->
+<!--                             binding:binding-notification-service -->
+<!--                         </type> -->
+<!--                         <name>binding-notification-broker</name> -->
+<!--                     </notification-service> -->
 
-                </module>
+<!--                 </module> -->
             </modules>
-            
-            <services xmlns="urn:opendaylight:params:xml:ns:yang:controller:config">
-                <!-- This service section tells the config subsystem to advertise the OSGi service. -->
-                <service>
-                    <!-- The type specifies the interface type of the service -->
-                    <type xmlns:butler="urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl">
-                        butler:butler-service
-                    </type>
-                    <!-- Specifies the service instance information -->
-                    <instance>
-                        <!-- Specifies a unique service name -->
-                        <name>butler-service</name>
-                        <!-- Specifies the path of the form -->
-                        <provider>/modules/module[type='butler-service-impl'][name='butler-service-impl']</provider>
-                    </instance>
-                </service>
-            </services>
+
+<!--             <services xmlns="urn:opendaylight:params:xml:ns:yang:controller:config"> -->
+<!--                 This service section tells the config subsystem to advertise the OSGi service. -->
+<!--                 <service> -->
+<!--                     The type specifies the interface type of the service -->
+<!--                     <type xmlns:butler="urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl"> -->
+<!--                         butler:butler-service -->
+<!--                     </type> -->
+<!--                     Specifies the service instance information -->
+<!--                     <instance> -->
+<!--                         Specifies a unique service name -->
+<!--                         <name>butler-service</name> -->
+<!--                         Specifies the path of the form -->
+<!--                         <provider>/modules/module[type='butler-service-impl'][name='butler-service-impl']</provider> -->
+<!--                     </instance> -->
+<!--                 </service> -->
+<!--             </services> -->
         </data>
 
     </configuration>
 
     <required-capabilities>
-        <capability>urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl?module=butler-service-impl&amp;revision=2014-11-16</capability>
+<!--         <capability>urn:opendaylight:params:xml:ns:yang:controller:config:butler-service:impl?module=butler-service-impl&amp;revision=2014-11-16</capability> -->
         <capability>urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl?module=cup-provider-impl&amp;revision=2014-11-16</capability>
     </required-capabilities>
 

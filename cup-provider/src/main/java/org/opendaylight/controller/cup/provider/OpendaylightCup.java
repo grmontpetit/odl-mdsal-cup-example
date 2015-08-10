@@ -8,36 +8,24 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.opendaylight.controller.config.yang.config.cup_provider.impl.CupProviderRuntimeMXBean;
+import org.opendaylight.controller.cup.provider.utils.CupMapper;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
-//import org.opendaylight.controller.md.sal.common.api.TransactionStatus;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.OptimisticLockFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
-import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
-
-//import org.opendaylight.controller.sal.binding.api.data.DataChangeListener;
-//import org.opendaylight.controller.sal.common.util.RpcErrors;
-//import org.opendaylight.controller.sal.common.util.Rpcs;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup.CupStatus;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupBuilder;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestocked;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestockedBuilder;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.DisplayString;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCupsBuilder;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.RestockCupsInput;
-//import org.opendaylight.yangtools.concepts.Immutable;
-//import org.opendaylight.yangtools.concepts.Path;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcError;
-//import org.opendaylight.yangtools.yang.common.RpcError.ErrorSeverity;
 import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
@@ -52,57 +40,59 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
-public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeListener, CupProviderRuntimeMXBean{
-    //making this public because this unique ID is required later on in other classes.
-    public static final InstanceIdentifier<Cup>  CUP_IID = InstanceIdentifier.builder(Cup.class).build();
+public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, CupService, CupProviderRuntimeMXBean{
+
     private static final Logger LOG = LoggerFactory.getLogger(OpendaylightCup.class);
-    private static final DisplayString CUP_MANUFACTURER = new DisplayString("Opendaylight");
-    private static final DisplayString CUP_MODEL_NUMBER = new DisplayString("Model 1 - Binding Aware");
-
-    private NotificationProviderService notificationProvider;
-    private DataBroker dataProvider;
+    private DataBroker dataBroker;
     private final ExecutorService executor;
-
-    private final AtomicLong amountOfCupsInStock = new AtomicLong( 100 );
-
-    private final AtomicLong cupTemperature = new AtomicLong( 1000 );
-
+    private final AtomicLong amountOfCupsInStock = new AtomicLong(100);
     private final AtomicLong cupsMade = new AtomicLong(0);
-
     // Thread safe holder for our temperature multiplier.
-    private final AtomicLong cupTemperatureFactor = new AtomicLong( 1000 );
-
-    // The following holds the Future for the current heat cup task.
-    // This is used to cancel the current toast.
+    private final AtomicLong cupTemperatureFactor = new AtomicLong(1000);
+    // The following holds the Future for the current heat cup task..
     private final AtomicReference<Future<?>> currentHeatCupTask = new AtomicReference<>();
+    private CupDataChangeListener cupDataChangeListener;
+    // Don't want to create transactions everytime
+    private volatile Status cupStatus = Status.Cold;
 
-    public OpendaylightCup(){
+    public OpendaylightCup() {
         executor = Executors.newFixedThreadPool(1);
     }
 
-    private Cup buildCup( CupStatus status ) {
-        // note - we are simulating a device whose manufacture and model are
-        // fixed (embedded) into the hardware.
-        // This is why the manufacture and model number are hardcoded.
-        return new CupBuilder().setCupManufacturer( CUP_MANUFACTURER )
-                                   .setCupModelNumber( CUP_MODEL_NUMBER )
-                                   .setCupStatus( status )
-                                   .build();
-    }
-
-    public void setNotificationProvider(NotificationProviderService salService) {
-        this.notificationProvider = salService;
+    /**
+     * Override from BindingAwareProvider
+     */
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("OpendaylightCup session initiated.");
+        dataBroker =  session.getSALService(DataBroker.class);
+        cupStatus.setStatus(0);
+        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL, CupMapper.getCupIid(), buildCup());
+        syncCupWithDataStore(LogicalDatastoreType.CONFIGURATION, CupMapper.getCupIid(), buildCup());
     }
 
     /**
-     * Set the dataBroker
-     * @param salDataProvider
+     * Used by the CupProviderModule to initialize
+     * the dataChange listener.
      */
-    public void setDataProvider( final DataBroker salDataProvider ) {
-        this.dataProvider = salDataProvider;
-        setCupStatusCold( null );
+    public void init() {
+        cupDataChangeListener = new CupDataChangeListener(dataBroker);
     }
 
+    /**
+     * Default function to build a cup. It will use the class global
+     * variables.
+     * @return A built cup object using CupBuilder().build()
+     */
+    private Cup buildCup() {
+        return new CupBuilder()
+                .setCupManufacturer(CupConstants.CUP_MANUFACTURER)
+                .setCupModelNumber(CupConstants.CUP_MODEL_NUMBER)
+                .setAmmountOfCupsInStock(amountOfCupsInStock.get())
+                .setAmmountOfCupsMade(cupsMade.get())
+                .setCupStatus(CupStatus.values()[cupStatus.getStatus()])
+                .build();
+    }
     /**
      * Set the cup status in the MD-SAL tree using the
      * MD-SAL data broker. This is a write only transaction.
@@ -110,11 +100,13 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
      */
     private void setCupStatusCold(final Function<Boolean, Void> resultCallback) {
 
-        WriteTransaction tx = dataProvider.newWriteOnlyTransaction();
-        tx.put( LogicalDatastoreType.OPERATIONAL, CUP_IID,
-                buildCup(CupStatus.Cold));
+        cupStatus.setStatus(0);
+        WriteTransaction transaction = dataBroker.newWriteOnlyTransaction();
+        transaction.put( LogicalDatastoreType.OPERATIONAL,
+                         CupMapper.getCupIid(),
+                         buildCup());
 
-        Futures.addCallback(tx.submit(), new FutureCallback<Void>() {
+        Futures.addCallback(transaction.submit(), new FutureCallback<Void>() {
             @Override
             public void onSuccess(final Void result) {
                 notifyCallback(true);
@@ -126,7 +118,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
                 // as no
                 // other component should be updating the operational state.
                 LOG.error("Failed to update cup status", t);
-
+                resetCupData();
                 notifyCallback(false);
             }
 
@@ -138,29 +130,14 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
         });
     }
 
-    /**
-     * The close method implementation of autocloseable.
-     */
-    @Override
-	public void close() throws Exception {
-        executor.shutdown();
-        
-        if (dataProvider != null) {
-            WriteTransaction tx = dataProvider.newWriteOnlyTransaction();
-            tx.delete(LogicalDatastoreType.OPERATIONAL,CUP_IID);
-            Futures.addCallback( tx.submit(), new FutureCallback<Void>() {
-                @Override
-                public void onSuccess( final Void result ) {
-                    LOG.debug( "Delete cup commit result: " + result );
-                }
-
-                @Override
-                public void onFailure( final Throwable t ) {
-                    LOG.error( "Delete of Cup failed", t );
-                }
-            } );
-        }
-	}
+    private void resetCupData() {
+        cupStatus.setStatus(0);
+        amountOfCupsInStock.incrementAndGet();
+        cupsMade.incrementAndGet();
+        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
+                             CupMapper.getCupIid(),
+                             buildCup());
+    }
 
     /**
      * Uses the yangtools.yang.common.RpcResultBuilder to
@@ -168,7 +145,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
      */
     @Override
     public Future<RpcResult<Void>> cancelCup() {
-        System.out.println("Cancel the cup heating.");
+        LOG.info("Cancel called on the Cup heating.");
         Future<?> current = currentHeatCupTask.getAndSet(null);
         if (current != null){
             current.cancel(true);
@@ -185,12 +162,10 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
     @Override
     public Future<RpcResult<Void>> heatCup(HeatCupInput input) {
         final SettableFuture<RpcResult<Void>> futureResult = SettableFuture.create();
-        
-        checkStatusAndHeatCup( input, futureResult, 2 );
-   
+        checkStatusAndHeatCup(input, futureResult, 2);
         return futureResult;
     }
-    
+
     /**
      * Read the CupStatus and, if currently Cold, try to write the status to Heating.
      * If that succeeds, then we essentially have an exclusive lock and can proceed
@@ -203,102 +178,90 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
                                        final SettableFuture<RpcResult<Void>> futureResult,
                                        final int tries) {
 
-        // Read the CupStatus and, if currently Cold, try to write the status to Heating.
-        // If that succeeds, then we essentially have an exclusive lock and can proceed
-        // to make the cup.
-        /**
-         * We create a ReadWriteTransaction by using the databroker.
-         * Then, we read the status of the cup with getCupStatus() using the
-         * databroker again. Once we have the status, we analyze it and
-         * then databroker submit function is called to effectively change 
-         * the cup status.
-         * 
-         * This all affects the MD-SAL tree, more specifically the part of the
-         * tree that contain the cup (the nodes).
+        /*  Read the CupStatus and, if currently Cold, try to write the status to Heating.
+         *  If that succeeds, then we essentially have an exclusive lock and can proceed
+         *  to make the cup.
+         *  We create a ReadWriteTransaction by using the databroker.
+         *  Then, we read the status of the cup with getCupStatus() using the
+         *  databroker again. Once we have the status, we analyze it and
+         *  then databroker submit function is called to effectively change 
+         *  the cup status.
+         *
+         *  This all affects the MD-SAL tree, more specifically the part of the
+         *  tree that contain the cup (the nodes).
          */
-        final ReadWriteTransaction tx = dataProvider.newReadWriteTransaction();
+        final ReadWriteTransaction transaction = dataBroker.newReadWriteTransaction();
         ListenableFuture<Optional<Cup>> readFuture =
-                                          tx.read( LogicalDatastoreType.OPERATIONAL, CUP_IID );
+                transaction.read(LogicalDatastoreType.OPERATIONAL, CupMapper.getCupIid());
 
         final ListenableFuture<Void> commitFuture =
-            Futures.transform( readFuture, new AsyncFunction<Optional<Cup>,Void>() {
+            Futures.transform(readFuture, new AsyncFunction<Optional<Cup>,Void>() {
 
                 @Override
                 public ListenableFuture<Void> apply(
-                        final Optional<Cup> cupData ) throws Exception {
+                        final Optional<Cup> cupData) throws Exception {
 
-                    CupStatus cupStatus = CupStatus.Cold;
-                    if( cupData.isPresent() ) {
-                        cupStatus = cupData.get().getCupStatus();
+                    if(cupData.isPresent()) {
+                        cupStatus.setStatus(cupData.get().getCupStatus().getIntValue());
+                        amountOfCupsInStock.set(cupData.get().getAmmountOfCupsInStock());
+                        cupsMade.set(cupData.get().getAmmountOfCupsMade());
+                    } else {
+                        throw new Exception("Error reading Cup data from the store.");
                     }
-
-                    LOG.debug( "Read cup status: {}", cupStatus );
-
-                    if( cupStatus == CupStatus.Cold ) {
-
-                        if( outOfCups() ) {
-                            LOG.debug( "No more cups" );
-
+                    LOG.debug("Read cup status: {}", cupStatus);
+                    if(cupStatus.getStatus() == CupStatus.Cold.getIntValue()) {
+                        if(amountOfCupsInStock.get() == 0) {
+                            LOG.debug("No more cups.");
                             return Futures.immediateFailedCheckedFuture(
-                                    new TransactionCommitFailedException( "", makeNoMoreCupsError() ) );
+                                    new TransactionCommitFailedException("", makeNoMoreCupsError()));
                         }
-
-                        LOG.debug( "Setting cup status to Down" );
-
-                        // We're not currently making toast - try to update the status to Down
-                        // to indicate we're going to make toast. This acts as a lock to prevent
-                        // concurrent toasting.
-                        tx.put( LogicalDatastoreType.OPERATIONAL, CUP_IID,
-                                buildCup( CupStatus.Heating ) );
-                        return tx.submit();
+                        LOG.info("Heating the Cup...");
+                        cupStatus.setStatus(CupStatus.Heating.getIntValue());
+                        transaction.put(LogicalDatastoreType.OPERATIONAL,
+                                        CupMapper.getCupIid(),
+                                        buildCup());
+                        return transaction.submit();
                     }
-
                     LOG.debug( "Oops - already making a cup!" );
-
                     // Return an error since we are already making cup. This will get
                     // propagated to the commitFuture below which will interpret the null
                     // TransactionStatus in the RpcResult as an error condition.
                     return Futures.immediateFailedCheckedFuture(
-                            new TransactionCommitFailedException( "", makeCupInUseError() ) );
+                            new TransactionCommitFailedException("", makeCupInUseError()));
                 }
-        } );
+        });
 
-        Futures.addCallback( commitFuture, new FutureCallback<Void>() {
+        Futures.addCallback(commitFuture, new FutureCallback<Void>() {
             @Override
-            public void onSuccess( final Void result ) {
+            public void onSuccess(final Void result) {
                 // OK to make cup
-                currentHeatCupTask.set( executor.submit( new HeatCupTask( input, futureResult ) ) );
+                currentHeatCupTask.set(executor.submit(new HeatCupTask(input,
+                                                        futureResult)));
             }
 
             @Override
             public void onFailure( final Throwable ex ) {
                 if( ex instanceof OptimisticLockFailedException ) {
-
-                    // Another thread is likely trying to make toast simultaneously and updated the
-                    // status before us. Try reading the status again - if another make toast is
+                    // Another thread is likely trying to heat a cup simultaneously and updated the
+                    // status before us. Try reading the status again - if another heat cup is
                     // now in progress, we should get CupStatus.Cold and fail.
-
                     if( ( tries - 1 ) > 0 ) {
                         LOG.debug( "Got OptimisticLockFailedException - trying again" );
-
-                        checkStatusAndHeatCup( input, futureResult, tries - 1 );
+                        checkStatusAndHeatCup(input, futureResult, tries - 1);
                     }
                     else {
-                        futureResult.set( RpcResultBuilder.<Void> failed()
-                                .withError( ErrorType.APPLICATION, ex.getMessage() ).build() );
+                        futureResult.set(RpcResultBuilder.<Void> failed()
+                                .withError(ErrorType.APPLICATION, ex.getMessage()).build());
                     }
-
                 } else {
-
                     LOG.debug( "Failed to commit Cup status", ex );
-
-                    // Probably already making toast.
-                    futureResult.set( RpcResultBuilder.<Void> failed()
-                            .withRpcErrors( ((TransactionCommitFailedException)ex).getErrorList() )
-                            .build() );
+                    // Probably already heating a cup.
+                    futureResult.set(RpcResultBuilder.<Void> failed()
+                            .withRpcErrors(((TransactionCommitFailedException)ex).getErrorList())
+                            .build());
                 }
             }
-        } );
+        });
     }// CheckStatusAndMakeCup
 
     /**
@@ -308,7 +271,7 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
      * the cup, when the cup is at the desired temprature, the
      * function returns null and the tea is ready to be brewed.
      * 
-     * TODO Englishmen drinks the cup, then this method
+     * Englishmen drinks the cup, then this method
      * sets the cup back to cold. The cup is automatically
      * filled with cold water ready to be heated in the
      * microwave.
@@ -319,44 +282,36 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
         final SettableFuture<RpcResult<Void>> futureResult;
 
         public HeatCupTask( final HeatCupInput cupRequest,
-                            final SettableFuture<RpcResult<Void>> futureResult ) {
+                            final SettableFuture<RpcResult<Void>> futureResult) {
             this.cupRequest = cupRequest;
             this.futureResult = futureResult;
         }
 
         @Override
         public Void call() {
-            try
-            {
+            try {
                 // make cup just sleeps for n seconds per 10 degrees level.
-                long cupTemperature = OpendaylightCup.this.cupTemperature.get();
-                //Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
-                System.out.println("Heating the cup for:"+(cupTemperature * cupRequest.getCupTemperature())+" mili seconds");
+                long cupTemperature = CupConstants.CUP_TEMPERATURE.get();
                 Thread.sleep(cupTemperature * cupRequest.getCupTemperature());
-                System.out.println("The cup is ready.");
+            } catch( InterruptedException e ) {
+                LOG.info( "Interrupted while heating a cup." );
             }
-            catch( InterruptedException e ) {
-                LOG.info( "Interrupted while making the toast" );
-            }
-
+            amountOfCupsInStock.decrementAndGet();
             cupsMade.incrementAndGet();
+            cupStatus.setStatus(CupStatus.Heating.getIntValue());
+            syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
+                                 CupMapper.getCupIid(),
+                                 buildCup());
 
-            amountOfCupsInStock.getAndDecrement();
-            if( outOfCups() ) {
-                LOG.info( "No more cups!" );
-
-                notificationProvider.publish( new NoMoreCupsBuilder().build() );
-            }
-
-            // Set the Cup status back to up - this essentially releases the toasting lock.
-            // We can't clear the current toast task nor set the Future result until the
+            // Set the Cup status back to up - this essentially releases the cup heating lock.
+            // We can't clear the current heat cup task nor set the Future result until the
             // update has been committed so we pass a callback to be notified on completion.
 
             setCupStatusCold( new Function<Boolean,Void>() {
                 @Override
                 public Void apply( final Boolean result ) {
 
-                    currentHeatCupTask.set( null );
+                    currentHeatCupTask.set(null);
 
                     LOG.debug("Cup ready");
 
@@ -368,15 +323,6 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
 
             return null;
         }
-    }
-
-    /**
-     * 
-     * @return true if there are no more cups, false otherwise.
-     */
-    private boolean outOfCups()
-    {
-        return amountOfCupsInStock.get() == 0;
     }
 
     /**
@@ -399,64 +345,85 @@ public class OpendaylightCup  implements CupService, AutoCloseable, DataChangeLi
     }
 
     /**
-     * This method is used to notify the OpendaylightCup when a data change
-     * is made to the configuration.
-     * 
-     * Effectively, the cup subtree node is modified through restconf
-     * and the onDataChanged is triggered. We check if the changed dataObject is
-     * from the cup subtree, if so we get the value of the temperature.
-     * 
-     * If the temprature from the node is not null, then we change the temperature of
-     * the cup class with the subtree temperature.
-     */
-    @Override
-    public void onDataChanged(  // AsyncDataChangedEvent interface
-                                // public interface AsyncDataChangeEvent<P extends Path<P>, D> extends Immutable{} 
-            AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
-        System.out.println("Data change event triggered on cup");
-        DataObject dataObject = change.getUpdatedSubtree();
-        if( dataObject instanceof Cup )
-        {
-            Cup cup = (Cup) dataObject;
-            Long temperature = cup.getCupTemperatureFactor();
-            if( temperature != null )
-            {
-                System.out.println("Cup temperature (longValue): "+temperature.longValue());
-                cupTemperatureFactor.set( temperature );
-            }
-        }
-    }
-
-    /**
      * Accessor method implemented from the CupProviderRuntimeMXBean interface.
      */
-	@Override
-	public Long getCupsMade() {
-		return cupsMade.get();
-	}
+    @Override
+    public Long getCupsMade() {
+        return cupsMade.get();
+    }
 
     /**
     * JMX RPC call implemented from the CupProviderRuntimeMXBean interface.
     */
-	@Override
-	public void clearCupsMade() {
-	    LOG.info("clearCupsMade");
-	    System.out.println("Clearing the ammount of cups that have been made.");
-	    cupsMade.set(0);
-	}
+    @Override
+    public void clearCupsMade() {
+        LOG.info("Clear the ammount of cups made.");
+        cupsMade.set(0);
+        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
+                             CupMapper.getCupIid(),
+                             buildCup());
+    }
 
     @Override
     public Future<RpcResult<Void>> restockCups(RestockCupsInput input) {
         LOG.info( "restockCups: " + input );
+        Long current = amountOfCupsInStock.get();
+        amountOfCupsInStock.set(current + input.getAmountOfCupsToClean());
+        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
+                             CupMapper.getCupIid(),
+                             buildCup());
+        return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+    }
 
-        amountOfCupsInStock.set(input.getAmountOfCupsToClean());
-        
-        if( amountOfCupsInStock.get() > 0 ) {
-            CupsRestocked reStockedNotification =
-                new CupsRestockedBuilder().setAmountOfCups( input.getAmountOfCupsToClean() ).build();
-            notificationProvider.publish( reStockedNotification );
+    public void setCupTemperatureFactor(Long temperature) {
+        this.cupTemperatureFactor.set(temperature);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void syncCupWithDataStore(final LogicalDatastoreType store,
+                                      InstanceIdentifier iid,
+                                      final DataObject object) {
+        WriteTransaction transaction = dataBroker.newWriteOnlyTransaction();
+        transaction.put(store, iid, object);
+        // Perform the tx.submit asynchronously
+        Futures.addCallback(transaction.submit(), new FutureCallback<Void>() {
+            @Override
+            public void onSuccess(final Void result) {
+                LOG.info("SyncStore {} with object {} succeeded", store, object);
+            }
+            @Override
+            public void onFailure(final Throwable throwable)  {
+                LOG.error("SyncStore {} with object {} failed", store, object);
+            }
+        });
+    }
+
+    /**
+     * The close method implementation of autocloseable.
+     * We delete any data that has been submitted using the
+     * Cup InstanceIdentifier.
+     */
+    @Override
+    public void close() throws Exception {
+        executor.shutdown();
+        if (dataBroker != null) {
+            WriteTransaction transaction = dataBroker.newWriteOnlyTransaction();
+            transaction.delete(LogicalDatastoreType.OPERATIONAL,CupMapper.getCupIid());
+            Futures.addCallback( transaction.submit(), new FutureCallback<Void>() {
+                @Override
+                public void onSuccess( final Void result ) {
+                    LOG.debug( "Delete cup commit result: " + result );
+                }
+
+                @Override
+                public void onFailure( final Throwable t ) {
+                    LOG.error( "Delete of Cup failed", t );
+                }
+            } );
         }
         
-        return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+        if (cupDataChangeListener != null) {
+            cupDataChangeListener.close();
+        }
     }
 }

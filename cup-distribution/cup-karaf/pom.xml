@@ -11,7 +11,7 @@
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-karaf</artifactId>
   <packaging>pom</packaging>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>${project.artifactId}</name>
 
   <prerequisites>
@@ -53,12 +53,11 @@
     </dependency>
 
     <!-- Cup Branding -->
-<!--     <dependency> -->
-<!--       <groupId>org.opendaylight.sample</groupId> -->
-<!--       <artifactId>karaf-branding</artifactId> -->
-<!--       <version>${project.version}</version> -->
-<!--       <scope>runtime</scope> -->
-<!--     </dependency> -->
+    <dependency>
+      <groupId>org.opendaylight.sample</groupId>
+      <artifactId>karaf-branding</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- Resources needed -->
     <dependency>
@@ -96,46 +95,6 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-<!--       <plugin> -->
-<!--         <groupId>org.apache.maven.plugins</groupId> -->
-<!--         <artifactId>maven-dependency-plugin</artifactId> -->
-<!--         <version>2.6</version> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>copy</id> -->
-<!--             <goals> -->
-<!--               <goal>copy</goal> -->
-<!--             </goals> -->
-<!--             <phase>generate-resources</phase> -->
-<!--             <configuration> -->
-<!--               <artifactItems> -->
-<!--                 <artifactItem> -->
-<!--                   <groupId>org.opendaylight.sample</groupId> -->
-<!--                   <artifactId>karaf-branding</artifactId> -->
-<!--                   <version>${karaf.branding.version}</version> -->
-<!--                   <outputDirectory>target/assembly/lib</outputDirectory> -->
-<!--                   <destFileName>karaf.branding-${karaf.branding.version}.jar</destFileName> -->
-<!--                 </artifactItem> -->
-<!--               </artifactItems> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--             <execution> -->
-<!--               <id>unpack-karaf-resources</id> -->
-<!--               <goals> -->
-<!--                 <goal>unpack-dependencies</goal> -->
-<!--               </goals> -->
-<!--               <phase>prepare-package</phase> -->
-<!--               <configuration> -->
-<!--                 <outputDirectory>${project.build.directory}/assembly</outputDirectory> -->
-<!--                 <groupId>org.opendaylight.controller</groupId> -->
-<!--                 <includeArtifactIds>opendaylight-karaf-resources</includeArtifactIds> -->
-<!--                 <excludes>META-INF\/**</excludes> -->
-<!--                 <excludeTransitive>true</excludeTransitive> -->
-<!--                 <ignorePermissions>false</ignorePermissions> -->
-<!--               </configuration> -->
-<!--             </execution> -->
-<!--         </executions> -->
-<!--       </plugin> -->
     </plugins>
   </build>
 

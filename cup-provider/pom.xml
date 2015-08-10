@@ -10,7 +10,7 @@
 
   <groupId>org.opendaylight.sample</groupId>
   <artifactId>cup-provider</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
    <!-- Minimal maven version to use. -->
@@ -42,25 +42,25 @@
       <artifactId>cup</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>config-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal-binding-api</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal-binding-config</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal-common-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-    </dependency>
+<!--     <dependency> -->
+<!--       <groupId>org.opendaylight.controller</groupId> -->
+<!--       <artifactId>config-api</artifactId> -->
+<!--     </dependency> -->
+<!--     <dependency> -->
+<!--       <groupId>org.opendaylight.controller</groupId> -->
+<!--       <artifactId>sal-binding-api</artifactId> -->
+<!--       </dependency> -->
+<!--     <dependency> -->
+<!--       <groupId>org.opendaylight.controller</groupId> -->
+<!--       <artifactId>sal-binding-config</artifactId> -->
+<!--     </dependency> -->
+<!--     <dependency> -->
+<!--       <groupId>org.opendaylight.controller</groupId> -->
+<!--       <artifactId>sal-common-util</artifactId> -->
+<!--     </dependency> -->
+<!--     <dependency> -->
+<!--       <groupId>org.osgi</groupId> -->
+<!--       <artifactId>org.osgi.core</artifactId> -->
+<!--     </dependency> -->
   </dependencies>
 </project>

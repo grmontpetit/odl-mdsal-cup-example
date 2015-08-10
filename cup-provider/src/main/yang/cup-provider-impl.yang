@@ -4,7 +4,7 @@ module cup-provider-impl {
     namespace "urn:opendaylight:params:xml:ns:yang:controller:config:cup-provider:impl";
     prefix "cup-provider-impl";
 
-    import config { prefix config; revision-date 2013-04-05"; }
+    import config { prefix config; revision-date 2013-04-05; }
     import rpc-context { prefix rpcx; revision-date 2013-06-17; }
     import opendaylight-md-sal-binding { prefix mdsal; revision-date 2013-10-28; }
 
@@ -30,11 +30,11 @@ module cup-provider-impl {
             when "/config:modules/config:module/config:type = 'cup-provider-impl'";
 
             //wires in the data-broker service 
-            container data-broker {
+            container broker {
                 uses config:service-ref {
                     refine type {
-                        mandatory false;
-                        config:required-identity mdsal:binding-async-data-broker;
+                        mandatory true;
+                        config:required-identity mdsal:binding-broker-osgi-registry;
                     }
                 }
             }
