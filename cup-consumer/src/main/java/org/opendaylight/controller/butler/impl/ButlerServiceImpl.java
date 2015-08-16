@@ -1,6 +1,9 @@
 package org.opendaylight.controller.butler.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -9,14 +12,22 @@ import java.util.concurrent.Future;
 import org.opendaylight.controller.butler.api.ButlerService;
 import org.opendaylight.controller.butler.api.NewsPaperType;
 import org.opendaylight.controller.config.yang.config.butler_service.impl.ButlerServiceRuntimeMXBean;
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ConsumerContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareConsumer;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.BlackTea;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupListener;
+import org.opendaylight.yang.gen.v1.inocybe.rev141116.Cup;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupService;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.CupsRestocked;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInput;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.HeatCupInputBuilder;
-import org.opendaylight.yang.gen.v1.inocybe.rev141116.NoMoreCups;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.TeaType;
+import org.opendaylight.yangtools.concepts.ListenerRegistration;
+import org.opendaylight.yangtools.yang.binding.DataObject;
+import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcResult;
@@ -33,18 +44,27 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXBean, CupListener{
+public class ButlerServiceImpl implements AutoCloseable, BindingAwareConsumer, ButlerService, ButlerServiceRuntimeMXBean, DataChangeListener{
 
-    private static final Logger log = LoggerFactory.getLogger(ButlerServiceImpl.class);
-
-    private final CupService cup;
-
+    private static final Logger LOG = LoggerFactory.getLogger(ButlerServiceImpl.class);
+    private CupService cup;
     private final ListeningExecutorService executor = 
                                    MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     private volatile boolean outOfCups;
+    private Map<String, ListenerRegistration<DataChangeListener>> listeners;
+    private DataBroker dataBroker;
 
     public ButlerServiceImpl(CupService cup){
         this.cup = cup;
+    }
+
+    @Override
+    public void onSessionInitialized(ConsumerContext session) {
+        this.dataBroker =  session.getSALService(DataBroker.class);
+        listeners = new HashMap<String, ListenerRegistration<DataChangeListener>>();
+        ListenerRegistration<DataChangeListener> cupDataChangeListener = dataBroker.registerDataChangeListener(
+                LogicalDatastoreType.CONFIGURATION, getCupIid() , this, DataChangeScope.SUBTREE);
+        listeners.put("butler", cupDataChangeListener);
     }
 
     @Override
@@ -91,6 +111,11 @@ public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXB
                 });
     }
 
+    private static final InstanceIdentifier<Cup> getCupIid() {
+        return InstanceIdentifier.builder(Cup.class)
+                                    .build();
+    }
+
     /**
      * 
      * @param npt (newsPaperType)
@@ -119,14 +144,13 @@ public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXB
             int cupTemperature) {
 
         if (outOfCups){
-            log.info("We don't have any cups left, but we have newspapers");
+            LOG.info("We don't have any cups left, but we have newspapers");
             return Futures.immediateFuture(RpcResultBuilder.<Void> success()
                     .withWarning(ErrorType.APPLICATION, "partial-operation",
                                  "Out of cups but I can serve you the newspapers").build() );
         }
 
         // Access the CupService to heat a cup
-        
         HeatCupInput cupInput = new HeatCupInputBuilder()
             .setCupTemperature((long) cupTemperature)
             .setCupTeaType(teaType)
@@ -141,29 +165,52 @@ public class ButlerServiceImpl implements ButlerService, ButlerServiceRuntimeMXB
             // This call has to block since we must return a result to the JMX client.
             RpcResult<Void> result = makeTea( NewsPaperType.LAPRESSE, BlackTea.class, 85 ).get();
             if( result.isSuccessful() ) {
-                log.info( "makeTea succeeded" );
+                LOG.info( "makeTea succeeded" );
             } else {
-                log.warn( "makeTea failed: " + result.getErrors() );
+                LOG.warn( "makeTea failed: " + result.getErrors() );
             }
-  
+
             return result.isSuccessful();
-  
+
         } catch( InterruptedException | ExecutionException e ) {
-            log.warn( "An error occurred while serving the tea: " + e );
+            LOG.warn( "An error occurred while serving the tea: " + e );
         }
-  
+
         return Boolean.FALSE;
     }
 
     @Override
-    public void onCupsRestocked(CupsRestocked notification) {
-        log.info( "CupRestocked notification - amountOfCups: " + notification.getAmountOfCups() );
-        outOfCups = false;
+    public void onDataChanged(
+            AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> changes) {
+        update(changes.getUpdatedData());
+    }
+
+    private void update(Map<InstanceIdentifier<?>, DataObject> changes) {
+        for (Entry<InstanceIdentifier<?>, DataObject> updated : changes.entrySet()) {
+            if (updated.getValue() != null && updated.getValue() instanceof Cup) {
+                Cup cup = (Cup)updated.getValue();
+                if (cup.getAmmountOfCupsInStock() == 0) {
+                    outOfCups = true;
+                } else {
+                    outOfCups = false;
+                }
+            }
+        }
+    }
+
+    public void setCupService(CupService cup) {
+        this.cup = cup;
     }
 
     @Override
-    public void onNoMoreCups(NoMoreCups notification) {
-        log.info("Out of clean cups");
-        outOfCups = true;
+    public void close() throws Exception {
+        executor.shutdown();
+        for (Map.Entry<String, ListenerRegistration<DataChangeListener>> entry : listeners.entrySet()) {
+            ListenerRegistration<DataChangeListener> value = entry.getValue();
+            if (value != null) {
+                value.close();
+            }
+        }
     }
+
 }

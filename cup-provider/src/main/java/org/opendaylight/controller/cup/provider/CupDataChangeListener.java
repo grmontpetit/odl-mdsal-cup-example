@@ -75,9 +75,9 @@ public class CupDataChangeListener implements DataChangeListener, AutoCloseable 
      */
     private void update(
             Map<InstanceIdentifier<?>, DataObject> changes) {
-        for (Entry<InstanceIdentifier<?>, DataObject> created : changes.entrySet()) {
-            if (created.getValue() != null && created.getValue() instanceof Cup) {
-                Cup oldCup = (Cup) created.getValue();
+        for (Entry<InstanceIdentifier<?>, DataObject> updated : changes.entrySet()) {
+            if (updated.getValue() != null && updated.getValue() instanceof Cup) {
+                Cup oldCup = (Cup) updated.getValue();
                 Long temperature = oldCup.getCupTemperatureFactor();
                 if( temperature != null ) {
                     WriteTransaction transaction = dataBroker.newWriteOnlyTransaction();

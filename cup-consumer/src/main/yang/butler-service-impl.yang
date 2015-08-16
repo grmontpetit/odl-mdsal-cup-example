@@ -45,6 +45,16 @@ module butler-service-impl {
         case butler-service-impl {
             when "/config:modules/config:module/config:type = 'butler-service-impl'";
 
+            //wires in the data-broker service 
+            container broker {
+                uses config:service-ref {
+                    refine type {
+                        mandatory true;
+                        config:required-identity mdsal:binding-broker-osgi-registry;
+                    }
+                }
+            }
+
             container rpc-registry {
                 uses config:service-ref {
                     refine type {
