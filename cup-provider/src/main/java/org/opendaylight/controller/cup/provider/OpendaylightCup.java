@@ -4,10 +4,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.opendaylight.controller.config.yang.config.cup_provider.impl.CupProviderRuntimeMXBean;
+import org.opendaylight.controller.cup.data.CupState;
 import org.opendaylight.controller.cup.provider.utils.CupMapper;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
@@ -45,15 +44,8 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
     private static final Logger LOG = LoggerFactory.getLogger(OpendaylightCup.class);
     private DataBroker dataBroker;
     private final ExecutorService executor;
-    private final AtomicLong amountOfCupsInStock = new AtomicLong(100);
-    private final AtomicLong cupsMade = new AtomicLong(0);
-    // Thread safe holder for our temperature multiplier.
-    private final AtomicLong cupTemperatureFactor = new AtomicLong(1000);
-    // The following holds the Future for the current heat cup task..
-    private final AtomicReference<Future<?>> currentHeatCupTask = new AtomicReference<>();
     private CupDataChangeListener cupDataChangeListener;
-    // Don't want to create transactions everytime
-    private volatile Status cupStatus = Status.Cold;
+    private volatile CupState cupState;
 
     public OpendaylightCup() {
         executor = Executors.newFixedThreadPool(1);
@@ -65,10 +57,11 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
     @Override
     public void onSessionInitiated(ProviderContext session) {
         LOG.info("OpendaylightCup session initiated.");
+        cupState = new CupState();
         dataBroker =  session.getSALService(DataBroker.class);
-        cupStatus.setStatus(0);
-        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL, CupMapper.getCupIid(), buildCup());
-        syncCupWithDataStore(LogicalDatastoreType.CONFIGURATION, CupMapper.getCupIid(), buildCup());
+        cupState.setCupStatus(0);
+        syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL, CupMapper.getCupIid(), buildOperationalCup());
+        syncCupWithDataStore(LogicalDatastoreType.CONFIGURATION, CupMapper.getCupIid(), buildConfigCup());
     }
 
     /**
@@ -84,15 +77,26 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
      * variables.
      * @return A built cup object using CupBuilder().build()
      */
-    private Cup buildCup() {
+    private Cup buildOperationalCup() {
         return new CupBuilder()
                 .setCupManufacturer(CupConstants.CUP_MANUFACTURER)
                 .setCupModelNumber(CupConstants.CUP_MODEL_NUMBER)
-                .setAmmountOfCupsInStock(amountOfCupsInStock.get())
-                .setAmmountOfCupsMade(cupsMade.get())
-                .setCupStatus(CupStatus.values()[cupStatus.getStatus()])
+                .setAmmountOfCupsInStock(cupState.getAmountOfCupsInStock().get())
+                .setAmmountOfCupsMade(cupState.getCupsMade().get())
+                .setCupStatus(CupStatus.values()[cupState.getCupStatus().getStatus()])
                 .build();
     }
+
+    private Cup buildConfigCup() {
+        return new CupBuilder()
+                .setCupManufacturer(CupConstants.CUP_MANUFACTURER)
+                .setCupModelNumber(CupConstants.CUP_MODEL_NUMBER)
+                .setAmmountOfCupsInStock(cupState.getAmountOfCupsInStock().get())
+                .setAmmountOfCupsMade(cupState.getCupsMade().get())
+                .setCupStatus(CupStatus.values()[cupState.getCupStatus().getStatus()])
+                .build();
+    }
+
     /**
      * Set the cup status in the MD-SAL tree using the
      * MD-SAL data broker. This is a write only transaction.
@@ -100,11 +104,11 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
      */
     private void setCupStatusCold(final Function<Boolean, Void> resultCallback) {
 
-        cupStatus.setStatus(0);
+        cupState.setCupStatus(0);
         WriteTransaction transaction = dataBroker.newWriteOnlyTransaction();
         transaction.put( LogicalDatastoreType.OPERATIONAL,
                          CupMapper.getCupIid(),
-                         buildCup());
+                         buildOperationalCup());
 
         Futures.addCallback(transaction.submit(), new FutureCallback<Void>() {
             @Override
@@ -131,12 +135,12 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
     }
 
     private void resetCupData() {
-        cupStatus.setStatus(0);
-        amountOfCupsInStock.incrementAndGet();
-        cupsMade.incrementAndGet();
+        cupState.setCupStatus(0);
+        cupState.getAmountOfCupsInStock().incrementAndGet();
+        cupState.getCupsMade().incrementAndGet();
         syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
                              CupMapper.getCupIid(),
-                             buildCup());
+                             buildOperationalCup());
     }
 
     /**
@@ -146,7 +150,7 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
     @Override
     public Future<RpcResult<Void>> cancelCup() {
         LOG.info("Cancel called on the Cup heating.");
-        Future<?> current = currentHeatCupTask.getAndSet(null);
+        Future<?> current = cupState.getCurrentHeatCupTask().getAndSet(null);
         if (current != null){
             current.cancel(true);
         }
@@ -202,24 +206,24 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
                         final Optional<Cup> cupData) throws Exception {
 
                     if(cupData.isPresent()) {
-                        cupStatus.setStatus(cupData.get().getCupStatus().getIntValue());
-                        amountOfCupsInStock.set(cupData.get().getAmmountOfCupsInStock());
-                        cupsMade.set(cupData.get().getAmmountOfCupsMade());
+                        cupState.setCupStatus(cupData.get().getCupStatus().getIntValue());
+                        cupState.getAmountOfCupsInStock().set(cupData.get().getAmmountOfCupsInStock());
+                        cupState.getCupsMade().set(cupData.get().getAmmountOfCupsMade());
                     } else {
                         throw new Exception("Error reading Cup data from the store.");
                     }
-                    LOG.debug("Read cup status: {}", cupStatus);
-                    if(cupStatus.getStatus() == CupStatus.Cold.getIntValue()) {
-                        if(amountOfCupsInStock.get() == 0) {
+                    LOG.debug("Read cup status: {}", cupState.getCupStatus());
+                    if(cupState.getCupStatus().getStatus() == CupStatus.Cold.getIntValue()) {
+                        if(cupState.getAmountOfCupsInStock().get() == 0) {
                             LOG.debug("No more cups.");
                             return Futures.immediateFailedCheckedFuture(
                                     new TransactionCommitFailedException("", makeNoMoreCupsError()));
                         }
                         LOG.info("Heating the Cup...");
-                        cupStatus.setStatus(CupStatus.Heating.getIntValue());
+                        cupState.setCupStatus(CupStatus.Heating.getIntValue());
                         transaction.put(LogicalDatastoreType.OPERATIONAL,
                                         CupMapper.getCupIid(),
-                                        buildCup());
+                                        buildOperationalCup());
                         return transaction.submit();
                     }
                     LOG.debug( "Oops - already making a cup!" );
@@ -235,7 +239,7 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
             @Override
             public void onSuccess(final Void result) {
                 // OK to make cup
-                currentHeatCupTask.set(executor.submit(new HeatCupTask(input,
+                cupState.getCurrentHeatCupTask().set(executor.submit(new HeatCupTask(input,
                                                         futureResult)));
             }
 
@@ -296,31 +300,25 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
             } catch( InterruptedException e ) {
                 LOG.info( "Interrupted while heating a cup." );
             }
-            amountOfCupsInStock.decrementAndGet();
-            cupsMade.incrementAndGet();
-            cupStatus.setStatus(CupStatus.Heating.getIntValue());
+            cupState.getAmountOfCupsInStock().decrementAndGet();
+            cupState.getCupsMade().incrementAndGet();
+            cupState.setCupStatus(CupStatus.Heating.getIntValue());
             syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
                                  CupMapper.getCupIid(),
-                                 buildCup());
+                                 buildOperationalCup());
 
             // Set the Cup status back to up - this essentially releases the cup heating lock.
             // We can't clear the current heat cup task nor set the Future result until the
             // update has been committed so we pass a callback to be notified on completion.
-
             setCupStatusCold( new Function<Boolean,Void>() {
                 @Override
                 public Void apply( final Boolean result ) {
-
-                    currentHeatCupTask.set(null);
-
+                    cupState.getCurrentHeatCupTask().set(null);
                     LOG.debug("Cup ready");
-
                     futureResult.set( RpcResultBuilder.<Void>success().build() );
-
                     return null;
                 }
             } );
-
             return null;
         }
     }
@@ -349,7 +347,7 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
      */
     @Override
     public Long getCupsMade() {
-        return cupsMade.get();
+        return cupState.getCupsMade().get();
     }
 
     /**
@@ -358,25 +356,25 @@ public class OpendaylightCup  implements  AutoCloseable, BindingAwareProvider, C
     @Override
     public void clearCupsMade() {
         LOG.info("Clear the ammount of cups made.");
-        cupsMade.set(0);
+        cupState.getCupsMade().set(0);
         syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
                              CupMapper.getCupIid(),
-                             buildCup());
+                             buildOperationalCup());
     }
 
     @Override
     public Future<RpcResult<Void>> restockCups(RestockCupsInput input) {
         LOG.info( "restockCups: " + input );
-        Long current = amountOfCupsInStock.get();
-        amountOfCupsInStock.set(current + input.getAmountOfCupsToClean());
+        Long current = cupState.getAmountOfCupsInStock().get();
+        cupState.getAmountOfCupsInStock().set(current + input.getAmountOfCupsToClean());
         syncCupWithDataStore(LogicalDatastoreType.OPERATIONAL,
                              CupMapper.getCupIid(),
-                             buildCup());
+                             buildOperationalCup());
         return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
     }
 
     public void setCupTemperatureFactor(Long temperature) {
-        this.cupTemperatureFactor.set(temperature);
+        this.cupState.getCupTemperatureFactor().set(temperature);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

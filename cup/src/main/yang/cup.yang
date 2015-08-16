@@ -1,7 +1,7 @@
 module cup {
-	yang-version 1;
+    yang-version 1;
 
-	namespace
+    namespace
       "inocybe";
 
     prefix tea;
@@ -99,6 +99,8 @@ module cup {
 
       leaf ammount-of-cups-in-stock {
         type uint32;
+
+        config false;
         default 5;
         description
           "The ammount of cups available.";
@@ -106,6 +108,7 @@ module cup {
       
       leaf ammount-of-cups-made {
         type uint32;
+        config false;
         default 0;
         description
           "The ammount of cups that have been made so far.";

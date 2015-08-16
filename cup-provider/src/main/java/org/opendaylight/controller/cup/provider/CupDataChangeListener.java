@@ -69,7 +69,8 @@ public class CupDataChangeListener implements DataChangeListener, AutoCloseable 
     }
 
     /**
-     * Changes the cup temperature factor.
+     * Changes the cup temperature factor and
+     * copy the change over the operational tree.
      * @param changes
      */
     private void update(
@@ -97,6 +98,5 @@ public class CupDataChangeListener implements DataChangeListener, AutoCloseable 
 
     private void create(
             Map<InstanceIdentifier<?>, DataObject> changes) {
-        // TODO Auto-generated method stub
     }
 }
