@@ -7,7 +7,6 @@ module butler-service-impl {
 
     import config { prefix config; revision-date 2013-04-05; }
     import rpc-context { prefix rpcx; revision-date 2013-06-17; }
-
     import opendaylight-md-sal-binding { prefix mdsal; revision-date 2013-10-28; }
 
     description
@@ -74,11 +73,11 @@ module butler-service-impl {
             }
         }
     }
-    
+
     augment "/config:modules/config:module/config:state" {
         case butler-service-impl {
             when "/config:modules/config:module/config:type = 'butler-service-impl'";
-            
+
             //rpcx:rpc-context-instance "make-scrambled-with-wheat-rpc";
             rpcx:rpc-context-instance "make-black-tea-with-lapresse-rpc";
         }

@@ -57,7 +57,7 @@ module cup-provider-impl {
                      config:required-identity mdsal:binding-notification-service;
                   }
                }
-            }       
+            }
         }
     }
 
@@ -65,11 +65,9 @@ module cup-provider-impl {
     augment "/config:modules/config:module/config:state" {
         case cup-provider-impl {
             when "/config:modules/config:module/config:type = 'cup-provider-impl'";
-            
             leaf cups-made {
                 type uint32;
             }
-            
             rpcx:rpc-context-instance "clear-cups-made-rpc";
         }
     }
@@ -79,7 +77,6 @@ module cup-provider-impl {
     rpc clear-cups-made  {
         description
           "JMX call to clear the cups-made counter.";
-          
         input {
             uses rpcx:rpc-context-ref {
                 refine context-instance {

@@ -29,11 +29,6 @@ public class ButlerServiceModule extends org.opendaylight.controller.config.yang
         CupService cupService = getRpcRegistryDependency().getRpcService(CupService.class);
         final ButlerServiceImpl butlerService = new ButlerServiceImpl(cupService);
         getBrokerDependency().registerConsumer(butlerService);
-        /**
-         * Register the butler as a cupListener
-         */
-//        final ListenerRegistration<NotificationListener> cupListenerReg =
-//                getNotificationServiceDependency().registerNotificationListener(butlerService);
 
         /**
          * Register the ButlerService with JMX

@@ -14,9 +14,9 @@ import org.opendaylight.controller.butler.api.NewsPaperType;
 import org.opendaylight.controller.config.yang.config.butler_service.impl.ButlerServiceRuntimeMXBean;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
 import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ConsumerContext;
 import org.opendaylight.controller.sal.binding.api.BindingAwareConsumer;
 import org.opendaylight.yang.gen.v1.inocybe.rev141116.BlackTea;
@@ -44,7 +44,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-public class ButlerServiceImpl implements AutoCloseable, BindingAwareConsumer, ButlerService, ButlerServiceRuntimeMXBean, DataChangeListener{
+public class ButlerServiceImpl implements AutoCloseable,BindingAwareConsumer,
+                                          ButlerService, ButlerServiceRuntimeMXBean, 
+                                          DataChangeListener{
 
     private static final Logger LOG = LoggerFactory.getLogger(ButlerServiceImpl.class);
     private CupService cup;
@@ -54,7 +56,7 @@ public class ButlerServiceImpl implements AutoCloseable, BindingAwareConsumer, B
     private Map<String, ListenerRegistration<DataChangeListener>> listeners;
     private DataBroker dataBroker;
 
-    public ButlerServiceImpl(CupService cup){
+    public ButlerServiceImpl(CupService cup) {
         this.cup = cup;
     }
 
@@ -78,7 +80,7 @@ public class ButlerServiceImpl implements AutoCloseable, BindingAwareConsumer, B
 
         ListenableFuture<RpcResult<Void>> fetchNewsPapersFuture = fetchNewsPapers(npt);
 
-        /**
+        /*
          * Combines the two listenable futures as a list of RpcResults
          */
         ListenableFuture<List<RpcResult<Void>>> combinedFutures = 

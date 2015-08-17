@@ -44,7 +44,7 @@
   <modules>
     <module>cup</module>
     <module>cup-provider</module>
-    <!--module>cup-consumer</module-->
+    <module>cup-consumer</module>
     <module>cup-config</module>
     <module>cup-features</module>
     <module>cup-artifacts</module>
