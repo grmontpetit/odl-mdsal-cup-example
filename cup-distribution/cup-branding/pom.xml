@@ -59,7 +59,7 @@
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Import-Package>*</Import-Package>
             <Private-Package>!*</Private-Package>
-            <Export-Package>org.opendaylight.sample.cup.branding</Export-Package>
+            <Export-Package>org.apache.karaf.branding</Export-Package>
             <Spring-Context>*;public-context:=false</Spring-Context>
           </instructions>
         </configuration>
