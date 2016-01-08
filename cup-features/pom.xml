@@ -45,7 +45,8 @@
   <properties>
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <config.version>0.4.0-SNAPSHOT</config.version>
-    <mdsal.version>1.3.0-SNAPSHOT</mdsal.version>
+    <mdsal.version>2.0.0-SNAPSHOT</mdsal.version>
+    <restconf.version>1.3.0-SNAPSHOT</restconf.version>
     <yangtools.version>0.8.0-SNAPSHOT</yangtools.version>
   </properties>
 
@@ -59,7 +60,7 @@
     <dependencies>
       <!-- project specific dependencies -->
       <dependency>
-        <groupId>org.opendaylight.controller</groupId>
+        <groupId>org.opendaylight.mdsal</groupId>
         <artifactId>mdsal-artifacts</artifactId>
         <version>${mdsal.version}</version>
         <type>pom</type>
@@ -78,7 +79,7 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.controller</groupId>
+      <groupId>org.opendaylight.mdsal</groupId>
       <artifactId>features-mdsal</artifactId>
       <classifier>features</classifier>
       <version>${mdsal.version}</version>
@@ -86,10 +87,10 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.controller</groupId>
+      <groupId>org.opendaylight.netconf</groupId>
       <artifactId>features-restconf</artifactId>
       <classifier>features</classifier>
-      <version>${mdsal.version}</version>
+      <version>${restconf.version}</version>
       <type>xml</type>
       <scope>runtime</scope>
     </dependency>

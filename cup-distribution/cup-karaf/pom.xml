@@ -55,7 +55,8 @@
     <!-- Cup Branding -->
     <dependency>
       <groupId>org.opendaylight.sample</groupId>
-      <artifactId>karaf-branding</artifactId>
+      <artifactId>cup-branding</artifactId>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
 

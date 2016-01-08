@@ -9,7 +9,7 @@
       <relativePath>../</relativePath>
     </parent>
 
-  <artifactId>karaf-branding</artifactId>
+  <artifactId>cup-branding</artifactId>
   <packaging>bundle</packaging>
   <name>${project.artifactId}</name>
 

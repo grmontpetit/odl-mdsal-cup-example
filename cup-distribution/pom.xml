@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>karaf-branding</module>
+    <module>cup-branding</module>
     <module>cup-karaf</module>
   </modules>
 </project>
