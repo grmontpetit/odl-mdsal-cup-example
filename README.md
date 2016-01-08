@@ -4,20 +4,10 @@ odl-mdsal-cup-example
 ## About
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 The project has its own distribution of karaf included and the features are loaded automatically on startup.
-The project has been updated to be closer to Berylium than to Lithium.
-
-## Improvements
-The current version is its own standalone distribution and the cup project is loaded on startup.
-The next iteration will be completely standalone, using artefacts from odlparent, yangtools and controller. This means there will not be a need to download and compile those 3 projects before beign able to use the cup project.
 
 ## Pre-requisite
-- Java JDK 1.7
+- Java JDK 1.7+
 - Maven 3.2.5+
-- odlparent ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/odlparent) and compiled)
-- yangtools ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/yangtools) and compiled)
-- controller ([cloned](https://git.opendaylight.org/gerrit/#/admin/projects/controller) and compiled)
-
-**Make sure you are using the master branch as the cup project is using berylium artifacts.**
 
 ## Using the project
 1. Compile the whole project
