@@ -20,7 +20,7 @@ import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 
-public abstract class AbstractChangeHandler<T extends DataObject> implements DataTreeChangeListener<T>, AutoCloseable{
+public abstract class AbstractChangeHandler<T extends DataObject> implements DataTreeChangeListener<T>, AutoCloseable {
 
     protected final DataBroker dataProvider;
     protected final ListenerRegistration<AbstractChangeHandler<T>> registeredListener;

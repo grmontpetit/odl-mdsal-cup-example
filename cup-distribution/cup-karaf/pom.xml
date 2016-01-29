@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opendaylight.controller</groupId>
     <artifactId>karaf-parent</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
@@ -20,7 +20,6 @@
 
   <properties>
     <karaf.localFeature>odl-cup</karaf.localFeature>
-<!--     <karaf.branding.version>${project.version}</karaf.branding.version> -->
   </properties>
 
   <dependencyManagement>
