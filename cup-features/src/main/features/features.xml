@@ -3,10 +3,10 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
    <!-- Features repositories -->
-    <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.mdsal/features-mdsal/${mdsal.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.controller/features-config/${config.version}/xml/features</repository>
-    <repository>mvn:org.opendaylight.netconf/features-restconf/${restconf.version}/xml/features</repository>
+    <repository>mvn:org.opendaylight.yangtools/features-yangtools/{{VERSION}}/xml/features</repository>
+    <repository>mvn:org.opendaylight.mdsal/features-mdsal/{{VERSION}}/xml/features</repository>
+    <repository>mvn:org.opendaylight.controller/features-config/{{VERSION}}/xml/features</repository>
+    <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
 
     <feature name='odl-cup' version='${project.version}' description="OpenDaylight :: Cup">
         <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
