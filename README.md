@@ -1,6 +1,9 @@
 odl-mdsal-cup-example
 =====================
 
+# Warning
+I have no updated this project in a while.
+
 ## About
 This is a clone of the MD-SAL toaster example but with Tea and Cups instead.
 The project has its own distribution of karaf included and the features are loaded automatically on startup.
